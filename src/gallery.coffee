@@ -34,7 +34,7 @@ class Gallery extends Widget
     if @opts.el is null
       throw "[Gallery] - 内容不能为空"
 
-    # Gallery.removeAll()
+    Gallery.removeAll()
     @_render()
     @_bind()
     @curThumb.data("gallery", @)
@@ -232,9 +232,7 @@ class Gallery extends Widget
         .end().data("originThumb", thumb)
         .appendTo(that.thumbsEl)
 
-
     galleryMask.fadeIn "fast"
-    # @thumbsEl.find('p').show()
 
 
   _rotate: () ->
@@ -258,10 +256,13 @@ class Gallery extends Widget
 
     win = $(window)
     stageSize =
-      width: win.width() - 20
+      width: win.width() - (if @thumbs.length > 1 then 110 else 0) - 40
       height: win.height() - 90
 
     imgSize = @_fitSize(stageSize, originSize)
+    imgSize.left = (if @thumbs.length > 1 then 110 else 0)
+    imgSize.top = -50
+
     @galleryEl.css imgSize
 
     if isOrthogonal
@@ -355,10 +356,10 @@ class Gallery extends Widget
       that.galleryEl = null
       that = null
 
-  # @removeAll: () ->
-  #   $(".gallery-wrapper").each () ->
-  #     gallery = $(@).data("dialog")
-  #     gallery.remove()
+  @removeAll: () ->
+    $(".gallery-wrapper").each () ->
+      gallery = $(@).data("gallery")
+      gallery.remove()
 
 
 
