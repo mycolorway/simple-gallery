@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>A simple dialog widget</title>
+	<meta charset="utf-8" />
+
+	<link media="all" rel="stylesheet" type="text/css" href="externals/font-awesome/css/font-awesome.css" />
+	<link media="all" rel="stylesheet" type="text/css" href="styles/gallery.css" />
+	<style type="text/css" media="all">
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		.container.workspace {
+			width: 860px;
+			height: 1400px;
+			margin: 0 auto 80px;
+		}
+
+		.one, .few, .lotsof {
+			clear: both;
+		}
+
+		.image {
+			display: table;
+			table-layout: fixed;
+			float: left;
+			width: 100px;
+			height: 80px;
+			margin: 0 20px 20px 0;
+		}
+
+		.image img {
+			max-width: 100px;
+			max-height: 100px;
+			border: 1px solid #ccc;
+		}
+	</style>
+
+	<script type="text/javascript" src="externals/jquery-2.0.3.js"></script>
+	<script type="text/javascript" src="lib/module.js"></script>
+	<script type="text/javascript" src="lib/util.js"></script>
+	<script type="text/javascript" src="lib/gallery.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$("a.image").on("click", function(e) {
+				var el = $(this)
+				simple.gallery({
+					el: el
+				})
+			});
+		});
+	</script>
+
+</head>
+<body>
+	<div class="container workspace">
+		<div class="one attachments">
+			<h4>One picture</h4>
+
+			<a href="javascript:;" class="image" data-origin-name="image01" data-origin-size="1440,740" data-origin-src="images/01.jpg">
+				<img alt="image01" src="images/01.jpg" title="image01">
+			</a>
+		</div>
+
+		<div class="few attachments">
+			<h4>Few pictures</h4>
+
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image03" data-origin-size="560,337" data-origin-src="images/03.gif">
+				<img alt="image03" src="images/03.gif" title="image03">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+		</div>
+
+		<div class="lotsof attachments">
+			<h4>Lots of pictures</h4>
+
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
+				<img alt="image02" src="images/02.png" title="image02">
+			</a>
+			<a href="javascript:;" class="image" data-origin-name="image04" data-origin-size="1330,433" data-origin-src="images/04.png">
+				<img alt="image04" src="images/04.png" title="image04">
+			</a>
+		</div>
+	</div>
+</body>
+</html>
