@@ -36,6 +36,15 @@
 			max-height: 100px;
 			border: 1px solid #ccc;
 		}
+
+		.gallery-wrapper .gallery-img .loading-indicator {
+			background-image: url("images/loading.gif");
+		}
+		@media all and (-webkit-min-device-pixel-ratio: 1.5), all and (-o-min-device-pixel-ratio: 3 / 2), all and (min--moz-device-pixel-ratio: 1.5), all and (min-device-pixel-ratio: 1.5) {
+			.gallery-wrapper .gallery-img .loading-indicator {
+				background-image: url("images/loading@2x.gif");
+			}
+		}
 	</style>
 
 	<script type="text/javascript" src="externals/jquery-2.0.3.js"></script>
@@ -47,7 +56,8 @@
 			$("a.image").on("click", function(e) {
 				var el = $(this)
 				simple.gallery({
-					el: el
+					el: el,
+					wrapCls: ".image-list"
 				})
 			});
 		});
@@ -56,7 +66,7 @@
 </head>
 <body>
 	<div class="container workspace">
-		<div class="one attachments">
+		<div class="one image-list">
 			<h4>One picture</h4>
 
 			<a href="javascript:;" class="image" data-origin-name="image01" data-origin-size="1440,740" data-origin-src="images/01.jpg">
@@ -64,7 +74,7 @@
 			</a>
 		</div>
 
-		<div class="few attachments">
+		<div class="few image-list">
 			<h4>Few pictures</h4>
 
 			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">
@@ -78,7 +88,7 @@
 			</a>
 		</div>
 
-		<div class="lotsof attachments">
+		<div class="lotsof image-list">
 			<h4>Lots of pictures</h4>
 
 			<a href="javascript:;" class="image" data-origin-name="image02" data-origin-size="559,332" data-origin-src="images/02.png">

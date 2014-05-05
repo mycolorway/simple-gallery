@@ -30,6 +30,9 @@ body.no-scroll {
   top: 0;
   left: 0;
   z-index: 9999;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
   -webkit-transition: all 350ms ease-in-out;
   -moz-transition: all 350ms ease-in-out;
   transition: all 350ms ease-in-out;
@@ -54,7 +57,7 @@ body.no-scroll {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #ffffff;
+  background: #fff;
   top: 0;
   left: 0;
   bottom: 0;
@@ -68,17 +71,24 @@ body.no-scroll {
   box-shadow: 0 0 28px rgba(0, 0, 0, 0.2);
 }
 .gallery-wrapper .gallery-img .loading-indicator {
-  display: none;
   position: absolute;
   top: 50%;
   left: 50%;
   width: 30px;
-  height: 30px;
-  margin: -15px 0 0 -15px;
-  background: white image-url("loading.gif") no-repeat 50% 50%;
+  height: 28px;
+  background-image: image-url("loading.gif");
+  background-repeat: no-repeat;
+  background-size: 30px 28px;
+  background-color: #fff;
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
+}
+@media all and (-webkit-min-device-pixel-ratio: 1.5), all and (-o-min-device-pixel-ratio: 3 / 2), all and (min--moz-device-pixel-ratio: 1.5), all and (min-device-pixel-ratio: 1.5) {
+  .gallery-wrapper .gallery-img .loading-indicator {
+    background-image: image-url("loading@2x.gif");
+    background-size: 30px 28px;
+  }
 }
 .gallery-wrapper .gallery-img.loading .loading-indicator {
   display: block;
@@ -109,47 +119,6 @@ body.no-scroll {
   color: #fff;
   background-color: #4298ba;
 }
-.gallery-wrapper .gallery-mask {
-  display: none;
-  position: absolute;
-  left: 0;
-  height: 100%;
-  width: 100px;
-  background: #000;
-  opacity: 0.2;
-}
-.gallery-wrapper .gallery-mask i {
-  color: #fff;
-  cursor: pointer;
-  opacity: 0.6;
-  font-size: 50px;
-  height: 100%;
-  line-height: 90px;
-  padding: 0 30px;
-}
-.gallery-wrapper .gallery-mask i:hover {
-  opacity: 1;
-}
-.gallery-wrapper .gallery-mask i.fa-angle-right {
-  float: right;
-}
-.gallery-wrapper .gallery-mask i.fa-angle-left {
-  float: left;
-}
-.gallery-wrapper .gallery-mask i.invisible {
-  opacity: 0 !important;
-  cursor: default;
-}
-.gallery-wrapper .gallery-cover {
-  margin: auto;
-  overflow: hidden;
-  position: absolute;
-  height: 90px;
-  width: 60%;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
 .gallery-wrapper .gallery {
   position: absolute;
   top: 0;
@@ -169,7 +138,7 @@ body.no-scroll {
 .gallery-wrapper .gallery p a {
   display: block;
   overflow: hidden;
-  opacity: 0.8;
+  opacity: 0.6;
   background-color: #fff;
 }
 .gallery-wrapper .gallery p a img {

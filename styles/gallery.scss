@@ -10,6 +10,7 @@ body.no-scroll {
 	position: fixed;
 	top: 0; left: 0;
 	z-index: 9999;
+	@include unselect;
 	@include transition(350ms);
 
 	&.modal { background-color: rgba(0,0,0,0.6); }
@@ -29,7 +30,7 @@ body.no-scroll {
 			position: absolute;
 			width: 100%;
 			height: 100%;
-			background: #ffffff;
+			background: #fff;
 			top: 0; left: 0; bottom: 0; right: 0;
 			margin: auto;
 			@include transition(350ms);
@@ -37,12 +38,12 @@ body.no-scroll {
 		}
 
 		.loading-indicator {
-			display: none;
+			// display: none;
 			position: absolute;
 			top: 50%; left: 50%;
-			width: 30px; height: 30px;
-			margin: -15px 0 0 -15px;
-			background: #ffffff image-url("loading.gif") no-repeat 50% 50%;
+			width: 30px; height: 28px;
+			@include at2x('loading', gif, 30px, 28px);
+			background-color: #fff;
 			@include radius(50%);
 		}
 
@@ -81,43 +82,6 @@ body.no-scroll {
 		}
 	}
 
-	.gallery-mask {
-		display: none;
-		position: absolute;
-		left: 0;
-		height: 100%; width: 100px;
-		background: #000;
-		opacity: 0.2;
-		i {
-			color: #fff;
-			cursor: pointer;
-			opacity: 0.6;
-			font-size: 50px;
-			height: 100%;
-			line-height: 90px;
-			padding: 0 30px;
-			&:hover { opacity: 1; }
-			&.fa-angle-right { float: right; }
-			&.fa-angle-left { float: left; }
-
-			&.invisible {
-				opacity: 0!important;
-				cursor: default;
-			}
-		}
-	}
-
-	.gallery-cover {
-		margin: auto;
-		overflow: hidden;
-		position: absolute;
-		height: 90px;
-		width: 60%;
-		bottom: 0;
-		left: 0;
-		right: 0;
-	}
-
 	.gallery {
 		position: absolute;
 		top: 0; bottom: 0; right: 0; left: 0;
@@ -133,7 +97,7 @@ body.no-scroll {
 			a {
 				display: block;
 				overflow: hidden;
-				opacity: 0.8;
+				opacity: 0.6;
 				background-color: #fff;
 
 				img {

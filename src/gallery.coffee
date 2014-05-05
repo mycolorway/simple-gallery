@@ -1,6 +1,7 @@
 class Gallery extends Widget
   opts:
-    el: null # required
+    el: null
+    wrapCls: ""
 
 
   @_tpl:
@@ -48,7 +49,7 @@ class Gallery extends Widget
     if @curOriginSrc is null
       return false
 
-    @thumbs = @curThumb.closest( ".attachments, .attachments-preview" )
+    @thumbs = @curThumb.closest( @opts.wrapCls )
                 .find( "*[data-origin-src]" )
 
     @_createStage()
@@ -218,7 +219,6 @@ class Gallery extends Widget
   _createList: () ->
     that = @
     @thumbsEl   = $(Gallery._tpl.thumbs).appendTo(@galleryWrapper)
-    galleryMask = @thumbsEl.siblings(".gallery-mask")
 
     return false if @thumbs.length <= 1
 
@@ -231,8 +231,6 @@ class Gallery extends Widget
         .find("img").attr("src", img.attr("src"))
         .end().data("originThumb", thumb)
         .appendTo(that.thumbsEl)
-
-    galleryMask.fadeIn "fast"
 
 
   _rotate: () ->
@@ -312,25 +310,18 @@ class Gallery extends Widget
     simple.preloadImages othersEl
 
 
-  _fitSize: (container, size, opts) ->
-    opts = $.extend(
-      stretch: false
-      minWidth: 0
-      minHeight: 0
-    , opts)
+  _fitSize: (container, size) ->
     result =
       width: size.width
       height: size.height
 
-    if opts.stretch or size.width > container.width or size.height > container.height or size.width < opts.minWidth or size.height < opts.minHeight
+    if size.width > container.width or size.height > container.height
       if size.width / size.height > container.width / container.height
-        result.width = Math.max(container.width, opts.minWidth)
+        result.width = container.width
         result.height = result.width * size.height / size.width
       else
-        result.height = Math.max(container.height, opts.minHeight)
+        result.height = container.height
         result.width = result.height * size.width / size.height
-    # result.left = (container.width - result.width) / 2
-    # result.top = (container.height - result.height) / 2
     result
 
 
@@ -340,7 +331,6 @@ class Gallery extends Widget
     @galleryWrapper.removeClass "modal"
     @imgDetail.fadeOut "fast"
     @thumbsEl.fadeOut "fast"
-    @thumbsEl.siblings(".gallery-mask").fadeOut "fast"
     @imgEl.attr "style", ""
 
     # 这里没有用 this.curThumbSize 的原因是有可能滚动条的位置发生了变化
