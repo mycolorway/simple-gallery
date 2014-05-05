@@ -1,9 +1,0 @@
-[submodule "externals/simple-module"]
-	path = externals/simple-module
-	url = git@github.com:mycolorway/simple-module.git
-[submodule "externals/simple-util"]
-	path = externals/simple-util
-	url = git@github.com:mycolorway/simple-util.git
-[submodule "externals/font-awesome"]
-	path = externals/font-awesome
-	url = git@github.com:FortAwesome/Font-Awesome.git

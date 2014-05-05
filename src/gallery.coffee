@@ -27,7 +27,7 @@ class Gallery extends Widget
     """
 
     thumb: """
-      <p><a href="javascript:;" class="link"><img src="" /></a></p>
+      <p class="thumb"><a href="javascript:;" class="link"><img src="" /></a></p>
     """
 
 
@@ -83,45 +83,43 @@ class Gallery extends Widget
     , @)
 
     @thumbsEl.on "click.gallery", ".link", $.proxy(@_onGalleryThumbClick, @)
-    doc = $(document)
-    doc.on "keydown.gallery", $.proxy((e) ->
+    $(document).on "keydown.gallery", $.proxy((e) ->
       if /27|32/.test(e.which)
         @remove()
         return false
       else if /37|38/.test(e.which)
-        @thumbsEl.find(".selected").prev("p").find("a").click()
+        @thumbsEl.find(".selected").prev(".thumb").find("a").click()
         @_scrollToThumb()
         return false
       else if /39|40/.test(e.which)
-        selectedEl = @thumbsEl.find(".selected").next("p").find("a").click()
+        selectedEl = @thumbsEl.find(".selected").next(".thumb").find("a").click()
         @_scrollToThumb()
         return false
     , @)
 
 
   _unbind: () ->
-    @galleryWrapper.off('.gallery')
-    @imgDetail.off('.gallery')
-    @thumbsEl.off('.gallery')
-    $(document).off('.gallery')
+    @galleryWrapper.off(".gallery")
+    @imgDetail.off(".gallery")
+    @thumbsEl.off(".gallery")
+    $(document).off(".gallery")
 
 
   # 当 curThumb 改变的时候就调用一次，更新当前显示图片的基本信息
   _onThumbChange: () ->
     curThumb = @curThumb
 
-    if curThumb.is('[src]')
+    if curThumb.is("[src]")
       curThumbImg = curThumb
     else
-      curThumbImg = curThumb.find('[src]:first')
+      curThumbImg = curThumb.find("[src]:first")
 
     @curThumbImg   = curThumbImg
-    @curOriginName = curThumb.data('origin-name')
-    @curOriginSrc  = curThumb.data('origin-src')
-    @curThumbSrc   = curThumbImg.attr('src')
+    @curOriginName = curThumb.data("origin-name")
+    @curOriginSrc  = curThumb.data("origin-src")
+    @curThumbSrc   = curThumbImg.attr("src")
     @curThumbSize  = @_getCurThumbSize()
     @curOriginSize = @_getCurOriginSize()
-
     @rotatedegrees = 0
 
 
@@ -138,15 +136,17 @@ class Gallery extends Widget
       left: (offset.left - doc.scrollLeft() - (win.width() - thumbImg.width()) / 2) * 2
     }
 
+
   _getCurOriginSize: () ->
-    curOriginSize = @curThumb.data("origin-size")
     curThumbSize  = @curThumbSize
+    curOriginSize = @curThumb.data("origin-size")
     curOriginSize = if curOriginSize then curOriginSize.split(",") else [0,0]
     curOriginSize =
       width: curOriginSize[0] * 1 or curThumbSize.width * 10
       height: curOriginSize[1] * 1 or curThumbSize.height * 10
 
     curOriginSize
+
 
   _renderImage: () ->
     return  unless this.galleryEl
@@ -155,19 +155,14 @@ class Gallery extends Widget
     originSize = @curOriginSize
     win = $(window)
     stageSize =
-      width: win.width() - (if @thumbs.length > 1 then 110 else 0) - 40
+      width: win.width() - (if @thumbs.length > 1 then 150 else 40)
       height: win.height() - 90
 
     originSize = originSize or
       width: thumbImg.width
       height: thumbImg.height
 
-    # 根据可视区域的大小计算出图片应该显示成多大
-    imgFitSize = @_fitSize(stageSize, originSize)
-    imgFitSize.left = (if @thumbs.length > 1 then 110 else 0)
-    imgFitSize.top = -50
-
-    @galleryEl.css imgFitSize
+    @galleryEl.css @_fitSize(stageSize, originSize)
     @imgEl.attr
       style: ""
       src: thumbImg.src
@@ -175,13 +170,11 @@ class Gallery extends Widget
     @galleryEl.addClass "loading"
     @imgDetail.fadeIn "fast"
 
-    imgFitSize;
-
 
   _onGalleryThumbClick: (e) ->
     that = @
     link = $(e.currentTarget)
-    galleryItem = link.parent("p")
+    galleryItem = link.parent(".thumb")
     originThumb = galleryItem.data("originThumb")
     @curThumb = originThumb
     @_onThumbChange()
@@ -264,9 +257,6 @@ class Gallery extends Widget
       height: win.height() - 90
 
     imgSize = @_fitSize(stageSize, originSize)
-    imgSize.left = (if @thumbs.length > 1 then 110 else 0)
-    imgSize.top = -50
-
     @galleryEl.css imgSize
 
     if isOrthogonal
@@ -281,13 +271,15 @@ class Gallery extends Widget
         height: imgSize.height
         left: 0
 
+
   _scrollToThumb: () ->
     doc = $(document)
     selectedEl = @thumbsEl.find(".selected")
     @thumbsEl.scrollTop(@thumbsEl.scrollTop() + selectedEl.offset().top - doc.scrollTop() - 5)
 
+
   _preloadOthers: () ->
-    othersEl = @curThumb.parents(".file-images").find("a[data-origin-src]").not(@curThumb).map(->
+    othersEl = @thumbs.not(@curThumb).map(->
       $(this).data "origin-src"
     ).get()
     simple.preloadImages othersEl
@@ -297,6 +289,8 @@ class Gallery extends Widget
     result =
       width: size.width
       height: size.height
+      left: (if @thumbs.length > 1 then 110 else 0)
+      top: -50
 
     if size.width > container.width or size.height > container.height
       if size.width / size.height > container.width / container.height
@@ -319,7 +313,7 @@ class Gallery extends Widget
     that = @
     @galleryEl.css @curThumbSize
     @galleryEl.one simple.transitionEnd(), (e) ->
-      that.galleryWrapper.trigger("galleryhide").remove()
+      that.galleryWrapper.remove()
       that.galleryEl = null
       that = null
 

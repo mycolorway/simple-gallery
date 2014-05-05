@@ -87,9 +87,10 @@ body.no-scroll {
 		top: 0; bottom: 0; right: 0; left: 0;
 		width: 110px; height: auto;
 		margin-bottom: 50px;
-		overflow: scroll;
+		overflow-y: auto;
+		overflow-x: hidden;
 
-		p {
+		.thumb {
 			float: left;
 			margin: 10px 9px 0;
 			width: 82px;

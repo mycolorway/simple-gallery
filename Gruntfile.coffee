@@ -4,27 +4,29 @@ module.exports = (grunt) ->
 
     pkg: grunt.file.readJSON 'package.json'
 
+
     sass:
-      styles:
+      gallery:
         options:
           style: 'expanded'
+          bundleExec: true
         files:
           'styles/gallery.css': 'styles/gallery.scss'
-    connect:
-      uses_defaults: {}
+
     coffee:
       module:
         files:
-          'lib/module.js': 'externals/simple-module/src/module.coffee'
+          'lib/module.js': 'vendor/bower/simple-module/src/module.coffee'
       util:
         files:
-          'lib/util.js': 'externals/simple-util/src/util.coffee'
+          'lib/util.js': 'vendor/bower/simple-util/src/util.coffee'
       gallery:
         files:
           'lib/gallery.js': 'src/gallery.coffee'
       spec:
         files:
           'spec/lib/gallery-spec.js': 'spec/src/gallery-spec.coffee'
+
     watch:
       styles:
         files: ['styles/*.scss']
@@ -32,14 +34,17 @@ module.exports = (grunt) ->
       scripts:
         files: ['src/**/*.coffee', 'spec/src/**/*.coffee']
         tasks: ['coffee']
+      jasmine:
+        files: ['lib/**/*.js', 'specs/**/*.js'],
+        tasks: 'jasmine:test:build'
+
     jasmine:
-      pivotal:
-        src: 'lib/gallery.js'
+      test:
+        src: 'lib/**/*.js'
         options:
-          vendor: ['lib/module.js', 'externals/jquery-2.0.3.js']
-          specs: 'spec/lib/gallery-spec.js'
-          summary: true
-          host : 'http://127.0.0.1:8000/'
+          outfile: 'spec/index.html'
+          specs: 'spec/util-spec.js'
+          vendor: ['vendor/bower/jquery/dist/jquery.min.js']
 
   grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
@@ -47,4 +52,4 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
   grunt.loadNpmTasks 'grunt-contrib-connect'
 
-  grunt.registerTask 'test', ['sass', 'coffee', 'connect', 'jasmine']
+  grunt.registerTask 'default', ['coffee', 'jasmine:test:build', 'watch']
