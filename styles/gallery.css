@@ -71,6 +71,7 @@ body.no-scroll {
   box-shadow: 0 0 28px rgba(0, 0, 0, 0.2);
 }
 .gallery-wrapper .gallery-img .loading-indicator {
+  display: none;
   position: absolute;
   top: 50%;
   left: 50%;

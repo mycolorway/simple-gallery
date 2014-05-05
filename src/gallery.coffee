@@ -62,6 +62,7 @@ class Gallery extends Widget
     setTimeout (->
       that._renderImage()
       that.galleryWrapper.removeClass "loading"
+      that._scrollToThumb() if that.thumbs.length > 1
       simple.preloadImages that.curOriginSrc, (originImg) ->
         return  if not originImg or not originImg.src
         that.imgEl.attr "src", originImg.src  if that.imgEl
@@ -82,15 +83,18 @@ class Gallery extends Widget
     , @)
 
     @thumbsEl.on "click.gallery", ".link", $.proxy(@_onGalleryThumbClick, @)
-    $(document).on "keydown.gallery", $.proxy((e) ->
+    doc = $(document)
+    doc.on "keydown.gallery", $.proxy((e) ->
       if /27|32/.test(e.which)
         @remove()
         return false
       else if /37|38/.test(e.which)
-        @_prevThumb()
+        @thumbsEl.find(".selected").prev("p").find("a").click()
+        @_scrollToThumb()
         return false
       else if /39|40/.test(e.which)
-        @_nextThumb()
+        selectedEl = @thumbsEl.find(".selected").next("p").find("a").click()
+        @_scrollToThumb()
         return false
     , @)
 
@@ -123,12 +127,15 @@ class Gallery extends Widget
 
   _getCurThumbSize: () ->
     doc = $(document)
+    win = $(window)
     thumbImg = @curThumbImg
     offset = thumbImg.offset()
 
     return {
       width: thumbImg.width()
       height: thumbImg.height()
+      top: (offset.top - doc.scrollTop() - (win.height() - thumbImg.height()) / 2) * 2
+      left: (offset.left - doc.scrollLeft() - (win.width() - thumbImg.width()) / 2) * 2
     }
 
   _getCurOriginSize: () ->
@@ -200,7 +207,6 @@ class Gallery extends Widget
     @galleryEl = @galleryWrapper.find(".gallery-img")
     @imgDetail = @galleryWrapper.find(".gallery-detail")
     @imgEl     = @galleryEl.find("img")
-    @loadingEl = @galleryEl.find(".loading-indicator")
 
     @imgEl.attr("src", @curThumbSrc)
     @imgDetail.find(".link-show-origin").attr("href", @curOriginSrc)
@@ -218,7 +224,7 @@ class Gallery extends Widget
   # 创建图片列表
   _createList: () ->
     that = @
-    @thumbsEl   = $(Gallery._tpl.thumbs).appendTo(@galleryWrapper)
+    @thumbsEl = $(Gallery._tpl.thumbs).appendTo(@galleryWrapper)
 
     return false if @thumbs.length <= 1
 
@@ -275,33 +281,10 @@ class Gallery extends Widget
         height: imgSize.height
         left: 0
 
-
-  _nextThumb: () ->
-    return  if @thumbsEl.find("p:animated").length
-
-    @thumbsEl.find(".selected").next("p").find("a").click()
-    if @thumbsEl.find(".selected:hidden").length and @thumbsEl.find("p:visible").next("p:hidden").length
-      @thumbsEl.find("p:visible").first().animate(
-        width: "0"
-        opacity: "0"
-        margin: "0"
-      , 300, ->
-        $(this).hide()
-        return
-      ).end().next("p:hidden").attr("style", "").fadeIn 300
-
-
-  _prevThumb: () ->
-    return  if @thumbsEl.find("p:animated").length
-
-    @thumbsEl.find(".selected").prev("p").find("a").click()
-    if @thumbsEl.find(".selected:hidden").length and @thumbsEl.find("p:visible").prev("p:hidden").length
-      @thumbsEl.find("p:visible").last().fadeOut(300)
-        .end().prev("p:hidden").attr("style", "opacity:0").animate
-          width: "toggle"
-          opacity: "1"
-        , 300
-
+  _scrollToThumb: () ->
+    doc = $(document)
+    selectedEl = @thumbsEl.find(".selected")
+    @thumbsEl.scrollTop(@thumbsEl.scrollTop() + selectedEl.offset().top - doc.scrollTop() - 5)
 
   _preloadOthers: () ->
     othersEl = @curThumb.parents(".file-images").find("a[data-origin-src]").not(@curThumb).map(->
@@ -333,18 +316,13 @@ class Gallery extends Widget
     @thumbsEl.fadeOut "fast"
     @imgEl.attr "style", ""
 
-    # 这里没有用 this.curThumbSize 的原因是有可能滚动条的位置发生了变化
-    # this.curThumbSize 里面的 top,left 值已经不准确了
-    # 没有在页面滚动的时候就去更新 this.curThumbSize 的原因
-    # 是 top 和 left 只在 show 和 remove 的时候用到，为了效率
     that = @
-    curThumbSize = @_getCurThumbSize()
-
-    @galleryEl.css curThumbSize
+    @galleryEl.css @curThumbSize
     @galleryEl.one simple.transitionEnd(), (e) ->
       that.galleryWrapper.trigger("galleryhide").remove()
       that.galleryEl = null
       that = null
+
 
   @removeAll: () ->
     $(".gallery-wrapper").each () ->
