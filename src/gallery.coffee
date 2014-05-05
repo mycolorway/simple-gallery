@@ -6,7 +6,7 @@ class Gallery extends Widget
 
   @_tpl:
     gallery: """
-      <div class="gallery-wrapper loading">
+      <div class="simple-gallery loading">
         <div class="gallery-main">
           <div class="gallery-img">
             <img src="" />
@@ -38,7 +38,7 @@ class Gallery extends Widget
     Gallery.removeAll()
     @_render()
     @_bind()
-    @curThumb.data("gallery", @)
+    @galleryWrapper.data("gallery", @)
 
 
   _render: () ->
@@ -92,7 +92,7 @@ class Gallery extends Widget
         @_scrollToThumb()
         return false
       else if /39|40/.test(e.which)
-        selectedEl = @thumbsEl.find(".selected").next(".thumb").find("a").click()
+        @thumbsEl.find(".selected").next(".thumb").find("a").click()
         @_scrollToThumb()
         return false
     , @)
@@ -207,7 +207,7 @@ class Gallery extends Widget
       .end().find(".name").text(@curOriginName)
 
     @galleryEl.css @curThumbSize
-    @galleryWrapper.appendTo ".container.workspace"
+    @galleryWrapper.appendTo "body"
     that = @
     setTimeout (->
       that.galleryWrapper.addClass "modal"
@@ -319,7 +319,7 @@ class Gallery extends Widget
 
 
   @removeAll: () ->
-    $(".gallery-wrapper").each () ->
+    $(".simple-gallery").each () ->
       gallery = $(@).data("gallery")
       gallery.remove()
 
@@ -333,3 +333,5 @@ $.extend(@simple, {
     return new Gallery opts
 
 })
+
+@simple.gallery.removeAll = Gallery.removeAll

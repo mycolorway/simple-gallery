@@ -9,7 +9,6 @@ module.exports = (grunt) ->
       gallery:
         options:
           style: 'expanded'
-          bundleExec: true
         files:
           'styles/gallery.css': 'styles/gallery.scss'
 
@@ -25,25 +24,36 @@ module.exports = (grunt) ->
           'lib/gallery.js': 'src/gallery.coffee'
       spec:
         files:
-          'spec/lib/gallery-spec.js': 'spec/src/gallery-spec.coffee'
+          'spec/gallery-spec.js': 'spec/gallery-spec.coffee'
 
     watch:
       styles:
         files: ['styles/*.scss']
         tasks: ['sass']
       scripts:
-        files: ['src/**/*.coffee', 'spec/src/**/*.coffee']
+        files: ['src/*.coffee', 'spec/*.coffee']
         tasks: ['coffee']
       jasmine:
-        files: ['lib/**/*.js', 'specs/**/*.js'],
+        files: [
+          'styles/gallery.css',
+          'lib/module.js',
+          'lib/util.js',
+          'lib/gallery.js',
+          'specs/*.js'
+        ],
         tasks: 'jasmine:test:build'
 
     jasmine:
       test:
-        src: 'lib/**/*.js'
+        src: [
+          'lib/module.js',
+          'lib/util.js',
+          'lib/gallery.js'
+        ]
         options:
           outfile: 'spec/index.html'
-          specs: 'spec/util-spec.js'
+          styles: 'styles/gallery.css'
+          specs: 'spec/gallery-spec.js'
           vendor: ['vendor/bower/jquery/dist/jquery.min.js']
 
   grunt.loadNpmTasks 'grunt-contrib-sass'
