@@ -28,7 +28,8 @@ beforeEach ->
 
 afterEach ->
   imageEl.remove()
-  simple.gallery.removeAll()
+  $(".simple-gallery").each () ->
+    $(@).data("gallery").destroy()
 
 
 
@@ -37,119 +38,112 @@ describe "basic usage", ->
     expect($(".simple-gallery").length).toBe(1)
 
 
-describe "async spec", ->
+describe "remove gallery", ->
+  it "should remove when click gallery", (done) ->
+    galleryEl.click()
+    done()
 
-  describe "remove gallery", ->
-    it "should remove when click gallery", (done) ->
-      galleryEl.click()
+
+  it "should remove when ESC keydown", (done) ->
+    esc = $.Event "keydown.gallery", which: 27
+    $(document).trigger(esc)
+    done()
+
+
+  it "should remove when Space keydown", (done) ->
+    space = $.Event "keydown.gallery", which: 32
+    $(document).trigger(space)
+    done()
+
+
+  afterEach (done) ->
+    setTimeout (->
+      expect($(".simple-gallery").length).toBe(0)
       done()
+    ), 400
 
 
-    it "should remove when ESC keydown", (done) ->
-      esc = $.Event "keydown.gallery", which: 27
-      $(document).trigger(esc)
+
+describe "picture size", ->
+  width = null
+  height = null
+
+  it "should not be larger than window", (done) ->
+    width = $(".gallery-img").width() - $(window).width()
+    height = $(".gallery-img").height() - $(window).height() - 50
+    done()
+
+
+  afterEach (done) ->
+    setTimeout (->
+      expect(width).toBeLessThan(0)
+      expect(height).toBeLessThan(0)
       done()
+    ), 400
 
 
-    it "should remove when Space keydown", (done) ->
-      space = $.Event "keydown.gallery", which: 32
-      $(document).trigger(space)
+
+describe "rotate picture", ->
+  scale = null
+  newScale = null
+
+  beforeEach (done) ->
+    setTimeout (->
+      scale = ($(".gallery-img").width() / $(".gallery-img").height()).toFixed(2)
+      $(".gallery-detail .turn-right").click()
+      newScale = ($(".gallery-img").height() / $(".gallery-img").width()).toFixed(2)
+    ), 400
+
+    setTimeout (->
+      newScale = ($(".gallery-img").height() / $(".gallery-img").width()).toFixed(2)
       done()
+    ), 800
+
+  it "should rotate the picture when click turn-right button", (done) ->
+    expect(scale).toEqual(newScale)
+    done()
 
 
-    it "should remove when call simple.gallery.removeAll", (done) ->
-      simple.gallery.removeAll()
+
+describe "next picture", ->
+  it "should show next picture when Right keydown", (done) ->
+    right = $.Event "keydown.gallery", which: 39
+    $(document).trigger(right)
+    done()
+
+
+  it "should show next picture when Down keydown", (done) ->
+    down = $.Event "keydown.gallery", which: 40
+    $(document).trigger(down)
+    done()
+
+
+  afterEach (done) ->
+    setTimeout (->
+      targetEl = $(".gallery .thumb:nth-child(3)")
+      expect(targetEl.hasClass("selected")).toBe(true)
+      expect($(".link-show-origin").attr("href")).toBe(targetEl.find("img").attr("src"))
       done()
+    ), 400
 
 
-    afterEach (done) ->
-      setTimeout (->
-        expect($(".simple-gallery").length).toBe(0)
-        done()
-      ), 500
+describe "prev picture", ->
+  it "should show prev picture when Left keydown", (done) ->
+    left = $.Event "keydown.gallery", which: 37
+    $(document).trigger(left)
+    done()
 
 
+  it "should show prev picture when Up keydown", (done) ->
+    up = $.Event "keydown.gallery", which: 38
+    $(document).trigger(up)
+    done()
 
-  describe "picture size", ->
-    width = null
-    height = null
 
-    it "should not be larger than window", (done) ->
-      width = $(".gallery-img").width() - $(window).width()
-      height = $(".gallery-img").height() - $(window).height() - 50
+  afterEach (done) ->
+    setTimeout (->
+      targetEl = $(".gallery .thumb:first-child")
+      expect(targetEl.hasClass("selected")).toBe(true)
+      expect($(".link-show-origin").attr("href")).toBe(targetEl.find("img").attr("src"))
       done()
-
-
-    afterEach (done) ->
-      setTimeout (->
-        expect(width).toBeLessThan(0)
-        expect(height).toBeLessThan(0)
-        done()
-      ), 500
-
-
-
-  describe "rotate picture", ->
-    scale = null
-    newScale = null
-
-    beforeEach (done) ->
-      setTimeout (->
-        scale = ($(".gallery-img").width() / $(".gallery-img").height()).toFixed(2)
-        $(".gallery-detail .turn-right").click()
-        newScale = ($(".gallery-img").height() / $(".gallery-img").width()).toFixed(2)
-      ), 500
-
-      setTimeout (->
-        newScale = ($(".gallery-img").height() / $(".gallery-img").width()).toFixed(2)
-        done()
-      ), 1000
-
-    it "should rotate the picture when click turn-right button", (done) ->
-      expect(scale).toEqual(newScale)
-      done()
-
-
-
-  describe "next picture", ->
-    it "should show next picture when Right keydown", (done) ->
-      right = $.Event "keydown.gallery", which: 39
-      $(document).trigger(right)
-      done()
-
-
-    it "should show next picture when Down keydown", (done) ->
-      down = $.Event "keydown.gallery", which: 40
-      $(document).trigger(down)
-      done()
-
-
-    afterEach (done) ->
-      setTimeout (->
-        targetEl = $(".gallery .thumb:nth-child(3)")
-        expect(targetEl.hasClass("selected")).toBe(true)
-        expect($(".link-show-origin").attr("href")).toBe(targetEl.find("img").attr("src"))
-        done()
-      ), 500
-
-
-  describe "prev picture", ->
-    it "should show prev picture when Left keydown", (done) ->
-      left = $.Event "keydown.gallery", which: 37
-      $(document).trigger(left)
-      done()
-
-
-    it "should show prev picture when Up keydown", (done) ->
-      up = $.Event "keydown.gallery", which: 38
-      $(document).trigger(up)
-      done()
-
-
-    afterEach (done) ->
-      setTimeout (->
-        targetEl = $(".gallery .thumb:first-child")
-        expect(targetEl.hasClass("selected")).toBe(true)
-        expect($(".link-show-origin").attr("href")).toBe(targetEl.find("img").attr("src"))
-        done()
-      ), 500
+    ), 400

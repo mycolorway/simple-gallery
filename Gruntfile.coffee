@@ -10,15 +10,9 @@ module.exports = (grunt) ->
         options:
           style: 'expanded'
         files:
-          'styles/gallery.css': 'styles/gallery.scss'
+          'lib/gallery.css': 'src/gallery.scss'
 
     coffee:
-      module:
-        files:
-          'lib/module.js': 'vendor/bower/simple-module/src/module.coffee'
-      util:
-        files:
-          'lib/util.js': 'vendor/bower/simple-util/src/util.coffee'
       gallery:
         files:
           'lib/gallery.js': 'src/gallery.coffee'
@@ -28,16 +22,14 @@ module.exports = (grunt) ->
 
     watch:
       styles:
-        files: ['styles/*.scss']
+        files: ['src/*.scss']
         tasks: ['sass']
       scripts:
         files: ['src/*.coffee', 'spec/*.coffee']
         tasks: ['coffee']
       jasmine:
         files: [
-          'styles/gallery.css',
-          'lib/module.js',
-          'lib/util.js',
+          'lib/gallery.css',
           'lib/gallery.js',
           'specs/*.js'
         ],
@@ -45,16 +37,16 @@ module.exports = (grunt) ->
 
     jasmine:
       test:
-        src: [
-          'lib/module.js',
-          'lib/util.js',
-          'lib/gallery.js'
-        ]
+        src: ['lib/gallery.js']
         options:
           outfile: 'spec/index.html'
-          styles: 'styles/gallery.css'
+          styles: 'lib/gallery.css'
           specs: 'spec/gallery-spec.js'
-          vendor: ['vendor/bower/jquery/dist/jquery.min.js']
+          vendor: [
+            'vendor/bower/jquery/dist/jquery.min.js',
+            'vendor/bower/simple-module/lib/module.js',
+            'vendor/bower/simple-util/lib/util.js'
+          ]
 
   grunt.loadNpmTasks 'grunt-contrib-sass'
   grunt.loadNpmTasks 'grunt-contrib-coffee'

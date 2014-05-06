@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>A simple dialog widget</title>
+	<title>A simple gallery widget</title>
 	<meta charset="utf-8" />
 
 	<link media="all" rel="stylesheet" type="text/css" href="vendor/bower/fontawesome/css/font-awesome.min.css" />
-	<link media="all" rel="stylesheet" type="text/css" href="styles/gallery.css" />
+	<link media="all" rel="stylesheet" type="text/css" href="lib/gallery.css" />
 	<style type="text/css" media="all">
 		body {
 			margin: 0;
@@ -37,19 +37,11 @@
 			border: 1px solid #ccc;
 		}
 
-		.gallery-wrapper .gallery-img .loading-indicator {
-			background-image: url("images/loading.gif");
-		}
-		@media all and (-webkit-min-device-pixel-ratio: 1.5), all and (-o-min-device-pixel-ratio: 3 / 2), all and (min--moz-device-pixel-ratio: 1.5), all and (min-device-pixel-ratio: 1.5) {
-			.gallery-wrapper .gallery-img .loading-indicator {
-				background-image: url("images/loading@2x.gif");
-			}
-		}
 	</style>
 
 	<script type="text/javascript" src="vendor/bower/jquery/dist/jquery.min.js"></script>
-	<script type="text/javascript" src="lib/module.js"></script>
-	<script type="text/javascript" src="lib/util.js"></script>
+	<script type="text/javascript" src="vendor/bower/simple-module/lib/module.js"></script>
+	<script type="text/javascript" src="vendor/bower/simple-util/lib/util.js"></script>
 	<script type="text/javascript" src="lib/gallery.js"></script>
 	<script type="text/javascript">
 		$(function() {

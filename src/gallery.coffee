@@ -7,27 +7,25 @@ class Gallery extends Widget
   @_tpl:
     gallery: """
       <div class="simple-gallery loading">
-        <div class="gallery-main">
-          <div class="gallery-img">
-            <img src="" />
-            <div class="loading-indicator"></div>
-          </div>
-          <div class="gallery-detail hide">
-            <span class="name"></span>
-            <a href="" class="link-show-origin" target="_blank" title="点击在新窗口查看原图"><i class="fa fa-external-link"></i></a>
-            <a href="" class="link-download" target="_blank" title="点击下载图片"><i class="fa fa-download"></i></a>
-            <a href="javascript:;" title="点击旋转图片方向" class="turn-right"><i class="fa fa-repeat"></i></a>
-          </div>
+        <div class="gallery-img">
+          <img src="" />
+          <div class="loading-indicator"></div>
+        </div>
+        <div class="gallery-detail hide">
+          <span class="name"></span>
+          <a class="link-show-origin" href="" title="点击在新窗口查看原图" target="_blank"><i class="fa fa-external-link"></i></a>
+          <a class="link-download" href="" title="点击下载图片" target="_blank"><i class="fa fa-download"></i></a>
+          <a class="turn-right" href="javascript:;" title="点击旋转图片方向"><i class="fa fa-repeat"></i></a>
         </div>
       </div>
     """
 
     thumbs: """
-      <div class="gallery"></div>
+      <div class="gallery-list"></div>
     """
 
     thumb: """
-      <p class="thumb"><a href="javascript:;" class="link"><img src="" /></a></p>
+      <p class="thumb"><a class="link" href="javascript:;"><img src="" /></a></p>
     """
 
 
@@ -35,7 +33,9 @@ class Gallery extends Widget
     if @opts.el is null
       throw "[Gallery] - 内容不能为空"
 
-    Gallery.removeAll()
+    $(".simple-gallery").each () ->
+      $(@).data("gallery").destroy()
+
     @_render()
     @_bind()
     @galleryWrapper.data("gallery", @)
@@ -55,23 +55,22 @@ class Gallery extends Widget
     @_createStage()
     @_createList()
 
-    that = @
-    @galleryEl.one simple.transitionEnd(), (e) ->
-      that.imgDetail.fadeIn "fast"
+    @imgDetail.fadeIn "fast"
+    @thumbsEl.fadeIn "fast"
 
-    setTimeout (->
-      that._renderImage()
-      that.galleryWrapper.removeClass "loading"
-      that._scrollToThumb() if that.thumbs.length > 1
-      simple.preloadImages that.curOriginSrc, (originImg) ->
+    setTimeout (=>
+      @_renderImage()
+      @galleryWrapper.removeClass "loading"
+      @_scrollToThumb() if @thumbs.length > 1
+      simple.preloadImages @curOriginSrc, (originImg) =>
         return  if not originImg or not originImg.src
-        that.imgEl.attr "src", originImg.src  if that.imgEl
-        that.galleryEl.removeClass "loading"  if that.galleryEl
-        that._preloadOthers()
+        @imgEl.attr "src", originImg.src  if @imgEl
+        @galleryEl.removeClass "loading"  if @galleryEl
+        @_preloadOthers()
     ), 5
 
   _bind: () ->
-    @galleryWrapper.on "click.gallery", $.proxy(@remove, @)
+    @galleryWrapper.on "click.gallery", $.proxy(@destroy, @)
 
     @imgDetail
     .on("click.gallery", ".name, .link-show-origin, .link-download", (e) ->
@@ -85,7 +84,7 @@ class Gallery extends Widget
     @thumbsEl.on "click.gallery", ".link", $.proxy(@_onGalleryThumbClick, @)
     $(document).on "keydown.gallery", $.proxy((e) ->
       if /27|32/.test(e.which)
-        @remove()
+        @destroy()
         return false
       else if /37|38/.test(e.which)
         @thumbsEl.find(".selected").prev(".thumb").find("a").click()
@@ -172,7 +171,6 @@ class Gallery extends Widget
 
 
   _onGalleryThumbClick: (e) ->
-    that = @
     link = $(e.currentTarget)
     galleryItem = link.parent(".thumb")
     originThumb = galleryItem.data("originThumb")
@@ -185,10 +183,10 @@ class Gallery extends Widget
       .end().find(".link-download").attr("href", @curOriginSrc + "&download=true")
     @_renderImage()
 
-    simple.preloadImages @curOriginSrc, (img) ->
-      if img.src.indexOf(that.curOriginSrc) isnt -1
-        that.imgEl.attr "src", img.src
-        that.galleryEl.removeClass "loading"
+    simple.preloadImages @curOriginSrc, (img) =>
+      if img.src.indexOf(@curOriginSrc) isnt -1
+        @imgEl.attr "src", img.src
+        @galleryEl.removeClass "loading"
 
     return false
 
@@ -207,29 +205,28 @@ class Gallery extends Widget
       .end().find(".name").text(@curOriginName)
 
     @galleryEl.css @curThumbSize
+    @galleryWrapper.addClass("single") if @thumbs.length is 1
     @galleryWrapper.appendTo "body"
-    that = @
-    setTimeout (->
-      that.galleryWrapper.addClass "modal"
+    setTimeout (=>
+      @galleryWrapper.addClass "modal"
     ), 5
 
 
   # 创建图片列表
   _createList: () ->
-    that = @
     @thumbsEl = $(Gallery._tpl.thumbs).appendTo(@galleryWrapper)
 
     return false if @thumbs.length <= 1
 
-    @thumbs.each ->
-      thumb = $(@)
+    @thumbs.each (index, event) =>
+      thumb = $(event)
       img   = if thumb.is("[src]") then thumb else thumb.find("[src]:first")
-      cls   = if that.curThumb.is(thumb) then "selected" else ""
+      cls   = if @curThumb.is(thumb) then "selected" else ""
 
       $(Gallery._tpl.thumb).addClass(cls)
         .find("img").attr("src", img.attr("src"))
         .end().data("originThumb", thumb)
-        .appendTo(that.thumbsEl)
+        .appendTo(@thumbsEl)
 
 
   _rotate: () ->
@@ -302,7 +299,7 @@ class Gallery extends Widget
     result
 
 
-  remove: () =>
+  destroy: () =>
     @_unbind()
     $("body").removeClass "no-scroll"
     @galleryWrapper.removeClass "modal"
@@ -310,18 +307,10 @@ class Gallery extends Widget
     @thumbsEl.fadeOut "fast"
     @imgEl.attr "style", ""
 
-    that = @
     @galleryEl.css @curThumbSize
-    @galleryEl.one simple.transitionEnd(), (e) ->
-      that.galleryWrapper.remove()
-      that.galleryEl = null
-      that = null
-
-
-  @removeAll: () ->
-    $(".simple-gallery").each () ->
-      gallery = $(@).data("gallery")
-      gallery.remove()
+    @galleryEl.one simple.transitionEnd(), (e) =>
+      @galleryWrapper.remove()
+      @galleryEl = null
 
 
 
@@ -333,5 +322,3 @@ $.extend(@simple, {
     return new Gallery opts
 
 })
-
-@simple.gallery.removeAll = Gallery.removeAll
