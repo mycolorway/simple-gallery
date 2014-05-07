@@ -9,6 +9,7 @@ module.exports = (grunt) ->
       gallery:
         options:
           style: 'expanded'
+          bundleExec: true
         files:
           'lib/gallery.css': 'src/gallery.scss'
 
