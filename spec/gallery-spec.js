@@ -10,7 +10,8 @@
   beforeEach(function() {
     imageEl.appendTo("body");
     gallery = simple.gallery({
-      el: imageEl.find("a:nth-child(2)"),
+      el: imageEl.find(".image:nth-child(2)"),
+      itemCls: ".image",
       wrapCls: ".image-list"
     });
     galleryEl = $(".simple-gallery");
@@ -123,7 +124,8 @@
     return afterEach(function(done) {
       return setTimeout((function() {
         var targetEl;
-        targetEl = $(".gallery .thumb:nth-child(3)");
+        targetEl = $(".gallery-list .thumb:nth-child(3)");
+        console.log(targetEl);
         expect(targetEl.hasClass("selected")).toBe(true);
         expect($(".link-show-origin").attr("href")).toBe(targetEl.find("img").attr("src"));
         return done();
@@ -151,7 +153,7 @@
     return afterEach(function(done) {
       return setTimeout((function() {
         var targetEl;
-        targetEl = $(".gallery .thumb:first-child");
+        targetEl = $(".gallery-list .thumb:first-child");
         expect(targetEl.hasClass("selected")).toBe(true);
         expect($(".link-show-origin").attr("href")).toBe(targetEl.find("img").attr("src"));
         return done();

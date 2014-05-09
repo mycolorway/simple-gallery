@@ -73,8 +73,8 @@ body.no-scroll {
 .simple-gallery .gallery-img.loading .loading-indicator {
   display: block;
 }
-.simple-gallery.single .gallery-detail {
-  margin-left: 0;
+.simple-gallery.multi .gallery-detail {
+  margin-left: 110px;
 }
 .simple-gallery .gallery-detail {
   position: absolute;
@@ -83,7 +83,7 @@ body.no-scroll {
   left: 0;
   display: none;
   width: auto;
-  margin-left: 110px;
+  margin-left: 0;
   font-size: 16px;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.4);
@@ -132,7 +132,6 @@ body.no-scroll {
 .simple-gallery .gallery-list .thumb a {
   display: block;
   overflow: hidden;
-  background-color: #fff;
   opacity: 0.6;
 }
 .simple-gallery .gallery-list .thumb a img {

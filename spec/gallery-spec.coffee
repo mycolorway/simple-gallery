@@ -18,7 +18,8 @@ beforeEach ->
   imageEl.appendTo("body")
 
   gallery = simple.gallery
-    el: imageEl.find("a:nth-child(2)")
+    el: imageEl.find(".image:nth-child(2)")
+    itemCls: ".image"
     wrapCls: ".image-list"
 
   galleryEl = $(".simple-gallery")
@@ -82,7 +83,6 @@ describe "picture size", ->
     ), 400
 
 
-
 describe "rotate picture", ->
   scale = null
   newScale = null
@@ -104,7 +104,6 @@ describe "rotate picture", ->
     done()
 
 
-
 describe "next picture", ->
   it "should show next picture when Right keydown", (done) ->
     right = $.Event "keydown.gallery", which: 39
@@ -120,7 +119,8 @@ describe "next picture", ->
 
   afterEach (done) ->
     setTimeout (->
-      targetEl = $(".gallery .thumb:nth-child(3)")
+      targetEl = $(".gallery-list .thumb:nth-child(3)")
+      console.log targetEl
       expect(targetEl.hasClass("selected")).toBe(true)
       expect($(".link-show-origin").attr("href")).toBe(targetEl.find("img").attr("src"))
       done()
@@ -142,7 +142,7 @@ describe "prev picture", ->
 
   afterEach (done) ->
     setTimeout (->
-      targetEl = $(".gallery .thumb:first-child")
+      targetEl = $(".gallery-list .thumb:first-child")
       expect(targetEl.hasClass("selected")).toBe(true)
       expect($(".link-show-origin").attr("href")).toBe(targetEl.find("img").attr("src"))
       done()

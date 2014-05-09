@@ -208,7 +208,7 @@ class Gallery extends Widget
       .end().find(".link-download").attr("href", @curOriginSrc + "&download=true")
 
     @galleryEl.css @curThumbSize
-    @galleryWrapper.addClass "single" if @thumbs.length is 1
+    @galleryWrapper.addClass "multi" if @thumbs.length > 1
     @galleryWrapper.appendTo "body"
     setTimeout (=>
       @galleryWrapper.addClass "modal"
@@ -296,8 +296,8 @@ class Gallery extends Widget
         result.width  = container.width
         result.height = result.width * size.height / size.width
       else
-        result.width  = result.height * size.width / size.height
         result.height = container.height
+        result.width  = result.height * size.width / size.height
     result
 
 
