@@ -90,11 +90,10 @@
     beforeEach(function(done) {
       setTimeout((function() {
         scale = ($(".gallery-img").width() / $(".gallery-img").height()).toFixed(2);
-        $(".gallery-detail .turn-right").click();
-        return newScale = ($(".gallery-img").height() / $(".gallery-img").width()).toFixed(2);
+        return $(".gallery-detail .turn-right").click();
       }), 400);
       return setTimeout((function() {
-        newScale = ($(".gallery-img").height() / $(".gallery-img").width()).toFixed(2);
+        newScale = ($(".gallery-img").width() / $(".gallery-img").height()).toFixed(2);
         return done();
       }), 800);
     });

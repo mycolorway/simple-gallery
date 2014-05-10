@@ -91,11 +91,10 @@ describe "rotate picture", ->
     setTimeout (->
       scale = ($(".gallery-img").width() / $(".gallery-img").height()).toFixed(2)
       $(".gallery-detail .turn-right").click()
-      newScale = ($(".gallery-img").height() / $(".gallery-img").width()).toFixed(2)
     ), 400
 
     setTimeout (->
-      newScale = ($(".gallery-img").height() / $(".gallery-img").width()).toFixed(2)
+      newScale = ($(".gallery-img").width() / $(".gallery-img").height()).toFixed(2)
       done()
     ), 800
 
