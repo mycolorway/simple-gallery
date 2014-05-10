@@ -108,7 +108,7 @@ body.no-scroll {
 }
 .simple-gallery .gallery-detail a:hover {
   color: #fff;
-  background-color: #4298ba;
+  background-color: #777;
 }
 .simple-gallery .gallery-list {
   position: absolute;
