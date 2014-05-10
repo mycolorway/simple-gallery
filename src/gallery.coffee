@@ -121,8 +121,8 @@ class Gallery extends Widget
 
     @curThumbImg   = curThumbImg
     @curThumbSrc   = curThumbImg.attr "src"
-    @curOriginName = curThumb.data("image-name") or curThumbImg.attr("alt") or "图片"
-    @curOriginSrc  = curThumb.data("image-src") or @curThumbSrc
+    @curOriginName = curThumb.data("image-name") or curThumb.data("origin-name") or curThumbImg.attr("alt") or "图片"
+    @curOriginSrc  = curThumb.data("image-src") or curThumb.data("origin-src") or @curThumbSrc
     @curThumbSize  = @_getCurThumbSize()
     @curOriginSize = @_getCurOriginSize()
     @rotatedegrees = 0
@@ -143,7 +143,7 @@ class Gallery extends Widget
 
 
   _getCurOriginSize: () ->
-    curOriginSize = @curThumb.data "image-size"
+    curOriginSize = @curThumb.data("image-size") or @curThumb.data("origin-size")
     curOriginSize = if curOriginSize then curOriginSize.split(",") else [0,0]
     curOriginSize =
       width:  curOriginSize[0] * 1 or @curThumbSize.width * 10
@@ -279,7 +279,7 @@ class Gallery extends Widget
 
   _preloadOthers: () ->
     othersEl = @thumbs.not(@curThumb).map(->
-      $(this).data "image-src"
+      $(this).data("image-src") or $(this).data("origin-src")
     ).get()
     simple.preloadImages othersEl
 
