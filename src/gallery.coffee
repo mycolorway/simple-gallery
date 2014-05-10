@@ -14,9 +14,9 @@ class Gallery extends Widget
         </div>
         <div class="gallery-detail hide">
           <span class="name"></span>
-          <a class="link-show-origin" href="" title="点击在新窗口查看原图" target="_blank"><i class="fa fa-external-link"></i></a>
-          <a class="link-download" href="" title="点击下载图片" target="_blank"><i class="fa fa-download"></i></a>
-          <a class="turn-right" href="javascript:;" title="点击旋转图片方向"><i class="fa fa-repeat"></i></a>
+          <a class="link-show-origin" href="" title="在新窗口查看原图" target="_blank"><i class="fa fa-external-link"></i></a>
+          <a class="link-download" href="" title="下载图片" target="_blank"><i class="fa fa-download"></i></a>
+          <a class="turn-right" href="javascript:;" title="旋转图片方向"><i class="fa fa-repeat"></i></a>
         </div>
       </div>
     """
