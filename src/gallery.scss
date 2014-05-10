@@ -28,21 +28,14 @@ body.no-scroll {
     margin: auto;
     cursor: pointer;
 
-    -webkit-transition: width 300ms, height 300ms, top 300ms, left 300ms;
-       -moz-transition: width 300ms, height 300ms, top 300ms, left 300ms;
-            transition: width 300ms, height 300ms, top 300ms, left 300ms;
+    -webkit-transition: all 350ms ease-in-out;
+       -moz-transition: all 350ms ease-in-out;
+            transition: all 350ms ease-in-out;
 
     img {
-      display: block;
-      position: absolute;
-      top: 0; left: 0; bottom: 0; right: 0;
       width: 100%; height: 100%;
       background: #fff;
-      margin: auto;
 
-      -webkit-transition: all 350ms ease-in-out;
-         -moz-transition: all 350ms ease-in-out;
-              transition: all 350ms ease-in-out;
       -webkit-box-shadow: 0 0 28px rgba(0, 0, 0, 0.2);
          -moz-box-shadow: 0 0 28px rgba(0, 0, 0, 0.2);
               box-shadow: 0 0 28px rgba(0, 0, 0, 0.2);

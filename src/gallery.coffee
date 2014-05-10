@@ -163,9 +163,7 @@ class Gallery extends Widget
       height: win.height() - 90
 
     @galleryEl.css @_fitSize(stageSize, originSize)
-    @imgEl.attr
-      style: ""
-      src: thumbImg.src
+    @imgEl.attr("src", thumbImg.src)
 
     @galleryEl.addClass "loading"
 
@@ -239,7 +237,7 @@ class Gallery extends Widget
     deg          = "rotate(" + @rotatedegrees + "deg)"
     originSize   = @curOriginSize
     isOrthogonal = @rotatedegrees / 90 % 2 is 1
-    @imgEl.css
+    @galleryEl.css
       "-webkit-transform": deg
       "-moz-transform":    deg
       "-ms-transform":     deg
@@ -257,18 +255,15 @@ class Gallery extends Widget
       height: win.height() - 90
 
     imgSize = @_fitSize(stageSize, originSize)
-    @galleryEl.css imgSize
 
     if isOrthogonal
-      @imgEl.css
+      @galleryEl.css
         width:  imgSize.height
         height: imgSize.width
-        left:   (imgSize.width - imgSize.height) / 2
     else
-      @imgEl.css
+      @galleryEl.css
         width:  imgSize.width
         height: imgSize.height
-        left:   0
 
 
   _scrollToThumb: () ->
@@ -307,7 +302,6 @@ class Gallery extends Widget
     @galleryWrapper.removeClass "modal"
     @imgDetail.fadeOut "fast"
     @thumbsEl.fadeOut "fast"
-    @imgEl.attr("style", "")
 
     @galleryEl.css @curThumbSize
     @galleryEl.one simple.transitionEnd(), (e) =>
