@@ -23,9 +23,9 @@
   left: 0;
   margin: auto;
   cursor: pointer;
-  -webkit-transition: 350ms ease-out;
-  -moz-transition: 350ms ease-out;
-  transition: 350ms ease-out;
+  -webkit-transition: width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, -webkit-transform 250ms ease-out;
+  -moz-transition: width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, -moz-transform 250ms ease-out;
+  transition: width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, transform 250ms ease-out;
 }
 .simple-gallery .gallery-img img {
   width: 100%;

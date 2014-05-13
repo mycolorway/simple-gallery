@@ -185,8 +185,8 @@ class Gallery extends Widget
 
     simple.preloadImages @curOriginSrc, (img) =>
       if img.src.indexOf(@curOriginSrc) isnt -1
-        @imgEl.attr("src", img.src)
         @galleryEl.removeClass "loading"
+        @imgEl.attr("src", img.src)
 
     return false
 
