@@ -43,7 +43,6 @@ class Gallery extends Widget
 
 
   _render: () ->
-    $("body").addClass "no-scroll"
     @curThumb = @opts.el
     @_onThumbChange()
 
@@ -257,13 +256,19 @@ class Gallery extends Widget
     imgSize = @_fitSize(stageSize, originSize)
 
     if isOrthogonal
+      # 用于修复 Firefox 下旋转后图片不能居中
+      if simple.browser.firefox and imgSize.height < imgSize.width
+        imgSize.top = (win.height() + imgSize.top - imgSize.width) / 2
+
       @galleryEl.css
         width:  imgSize.height
         height: imgSize.width
+        top:    imgSize.top
     else
       @galleryEl.css
         width:  imgSize.width
         height: imgSize.height
+        top:    imgSize.top
 
 
   _scrollToThumb: () ->
@@ -298,7 +303,6 @@ class Gallery extends Widget
 
   destroy: () =>
     @_unbind()
-    $("body").removeClass "no-scroll"
     @galleryWrapper.removeClass "modal"
     @imgDetail.fadeOut "fast"
     @thumbsEl.fadeOut "fast"

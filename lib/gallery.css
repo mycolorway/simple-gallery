@@ -1,7 +1,3 @@
-body.no-scroll {
-  overflow: hidden;
-}
-
 .simple-gallery {
   position: fixed;
   top: 0;
@@ -12,9 +8,9 @@ body.no-scroll {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-  -webkit-transition: all 250ms ease-in-out;
-  -moz-transition: all 250ms ease-in-out;
-  transition: all 250ms ease-in-out;
+  -webkit-transition: background-color 250ms ease-out;
+  -moz-transition: background-color 250ms ease-out;
+  transition: background-color 250ms ease-out;
 }
 .simple-gallery.modal {
   background-color: rgba(0, 0, 0, 0.6);
@@ -27,9 +23,9 @@ body.no-scroll {
   left: 0;
   margin: auto;
   cursor: pointer;
-  -webkit-transition: all 350ms ease-in-out;
-  -moz-transition: all 350ms ease-in-out;
-  transition: all 350ms ease-in-out;
+  -webkit-transition: 350ms ease-out;
+  -moz-transition: 350ms ease-out;
+  transition: 350ms ease-out;
 }
 .simple-gallery .gallery-img img {
   width: 100%;
