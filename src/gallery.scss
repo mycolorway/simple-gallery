@@ -9,9 +9,9 @@
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-  -webkit-transition: background-color 250ms ease-out;
-     -moz-transition: background-color 250ms ease-out;
-          transition: background-color 250ms ease-out;
+  -webkit-transition: background-color 200ms ease-out;
+     -moz-transition: background-color 200ms ease-out;
+          transition: background-color 200ms ease-out;
 
   &.modal { background-color: rgba(0,0,0,0.6); }
 
@@ -24,9 +24,9 @@
     margin: auto;
     cursor: pointer;
 
-    -webkit-transition: width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, -webkit-transform 250ms ease-out;
-       -moz-transition: width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, -moz-transform 250ms ease-out;
-            transition: width 250ms ease-out, height 250ms ease-out, top 250ms ease-out, left 250ms ease-out, transform 250ms ease-out;
+    -webkit-transition: width 200ms ease-out, height 200ms ease-out, top 200ms ease-out, left 200ms ease-out, -webkit-transform 200ms ease-out;
+       -moz-transition: width 200ms ease-out, height 200ms ease-out, top 200ms ease-out, left 200ms ease-out, -moz-transform 200ms ease-out;
+            transition: width 200ms ease-out, height 200ms ease-out, top 200ms ease-out, left 200ms ease-out, transform 200ms ease-out;
 
     img {
       width: 100%; height: 100%;
