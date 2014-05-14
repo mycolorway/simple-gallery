@@ -174,7 +174,13 @@ class Gallery extends Widget
     @curThumb   = originThumb
     @_onThumbChange()
 
-    @galleryEl.attr("style", "")
+    @galleryEl.css
+      "-webkit-transform": "rotate(0deg)"
+      "-moz-transform":    "rotate(0deg)"
+      "-ms-transform":     "rotate(0deg)"
+      "-o-transform":      "rotate(0deg)"
+      transform:           "rotate(0deg)"
+
     galleryItem.addClass "selected"
       .siblings ".selected"
       .removeClass "selected"
