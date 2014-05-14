@@ -14,9 +14,11 @@ class Gallery extends Widget
         </div>
         <div class="gallery-detail hide">
           <span class="name"></span>
-          <a class="link-show-origin" href="" title="在新窗口查看原图" target="_blank"><i class="fa fa-external-link"></i></a>
-          <a class="link-download" href="" title="下载图片" target="_blank"><i class="fa fa-download"></i></a>
-          <a class="turn-right" href="javascript:;" title="旋转图片方向"><i class="fa fa-repeat"></i></a>
+          <div class="gallery-control">
+            <a class="turn-right" href="javascript:;" title="旋转图片方向"><i class="fa fa-repeat"></i></a>
+            <a class="link-download" href="" title="下载图片" target="_blank"><i class="fa fa-download"></i></a>
+            <a class="link-show-origin" href="" title="在新窗口查看原图" target="_blank"><i class="fa fa-external-link"></i></a>
+          </div>
         </div>
       </div>
     """
@@ -75,19 +77,18 @@ class Gallery extends Widget
 
 
   _bind: () ->
-    @galleryWrapper.on "click.gallery", $.proxy(@destroy, @)
+    @galleryWrapper.on "click.gallery", (e) =>
+      if $(e.target).closest(".gallery-detail, .gallery-list").length
+        return
+      @destroy()
 
-    @imgDetail
-    .on("click.gallery", ".name, .link-show-origin, .link-download", (e) ->
-      e.stopPropagation()
-    ).on "click.gallery", ".turn-right", $.proxy((e) ->
+    @imgDetail.find(".turn-right").on "click.gallery", (e) =>
       e.preventDefault()
       e.stopPropagation()
       @_rotate()
-    , @)
 
     @thumbsEl.on "click.gallery", ".link", $.proxy(@_onGalleryThumbClick, @)
-    $(document).on "keydown.gallery", $.proxy((e) ->
+    $(document).on "keydown.gallery", (e) =>
       if /27|32/.test(e.which)
         @destroy()
         return false
@@ -99,7 +100,6 @@ class Gallery extends Widget
         @thumbsEl.find(".selected").next(".thumb").find("a").click()
         @_scrollToThumb()
         return false
-    , @)
 
 
   _unbind: () ->
@@ -174,6 +174,7 @@ class Gallery extends Widget
     @curThumb   = originThumb
     @_onThumbChange()
 
+    @galleryEl.attr("style", "")
     galleryItem.addClass "selected"
       .siblings ".selected"
       .removeClass "selected"

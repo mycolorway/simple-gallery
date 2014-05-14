@@ -69,30 +69,38 @@
   left: 0;
   display: none;
   width: auto;
+  height: 50px;
   margin-left: 0;
   font-size: 16px;
   color: #fff;
   text-align: center;
+  line-height: 50px;
   background-color: rgba(0, 0, 0, 0.4);
 }
 .simple-gallery .gallery-detail .name {
   display: inline-block;
-  margin: 14px 0;
-  max-width: 60%;
-  text-indent: 180px;
+  max-width: 50%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  user-select: text;
 }
-.simple-gallery .gallery-detail a {
-  float: right;
+.simple-gallery .gallery-detail .gallery-control {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 50px;
+}
+.simple-gallery .gallery-detail .gallery-control a {
+  display: inline-block;
   width: 60px;
-  padding: 15px 0 12px;
   text-align: center;
   font-size: 20px;
   color: #999;
 }
-.simple-gallery .gallery-detail a:hover {
+.simple-gallery .gallery-detail .gallery-control a:hover {
   color: #fff;
   background-color: #777;
 }
