@@ -45,6 +45,8 @@ class Gallery extends Widget
 
 
   _render: () ->
+    $("html").css "overflow", "hidden"
+
     @curThumb = @opts.el
     @_onThumbChange()
 
@@ -295,7 +297,8 @@ class Gallery extends Widget
     result =
       width:  size.width
       height: size.height
-      left:   (if @thumbs.length > 1 then 110 else 0)
+      left:   0
+      right: (if @thumbs.length > 1 then 110 else 0)
       top:    -50
 
     if size.width > container.width or size.height > container.height
@@ -309,6 +312,8 @@ class Gallery extends Widget
 
 
   destroy: () =>
+    $("html").css "overflow", "scroll"
+
     @_unbind()
     @galleryWrapper.removeClass "modal"
     @imgDetail.fadeOut "fast"
