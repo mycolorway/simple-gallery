@@ -1,5 +1,5 @@
-.overflow-hidden {
-  overflow: hidden;
+html.simple-gallery-active {
+  overflow: hidden !important;
 }
 
 .simple-gallery {

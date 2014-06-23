@@ -45,7 +45,7 @@ class Gallery extends Widget
 
 
   _render: () ->
-    $("html").addClass "overflow-hidden"
+    $("html").addClass "simple-gallery-active"
 
     @curThumb = @opts.el
     @_onThumbChange()
@@ -312,7 +312,7 @@ class Gallery extends Widget
 
 
   destroy: () =>
-    $("html").removeClass "overflow-hidden"
+    $("html").removeClass "simple-gallery-active"
 
     @_unbind()
     @galleryWrapper.removeClass "modal"
