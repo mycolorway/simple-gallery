@@ -316,8 +316,8 @@ class Gallery extends Widget
 
     @_unbind()
     @galleryWrapper.removeClass "modal"
-    @imgDetail.fadeOut "fast"
-    @thumbsEl.fadeOut "fast"
+    @imgDetail.fadeOut "200"
+    @thumbsEl.fadeOut "200"
 
     @galleryEl.css @curThumbSize
     @galleryEl.one simple.transitionEnd(), (e) =>
