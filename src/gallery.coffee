@@ -319,6 +319,7 @@ class Gallery extends Widget
     @imgDetail.fadeOut "200"
     @thumbsEl.fadeOut "200"
 
+    @curThumbSize.left += 110 if @thumbs.length > 1
     @galleryEl.css @curThumbSize
     @galleryEl.one simple.transitionEnd(), (e) =>
       @galleryWrapper.remove()
