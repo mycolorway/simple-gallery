@@ -1,4 +1,5 @@
-class Gallery extends Widget
+class Gallery extends SimpleModule
+
   opts:
     el:      null
     itemCls: ""
@@ -326,12 +327,6 @@ class Gallery extends Widget
       @galleryEl = null
 
 
+gallery = (opts) ->
+  return new Gallery opts
 
-@simple ||= {}
-
-$.extend(@simple, {
-
-  gallery: (opts) ->
-    return new Gallery opts
-
-})

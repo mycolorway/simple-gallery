@@ -4,48 +4,64 @@ module.exports = (grunt) ->
 
     pkg: grunt.file.readJSON 'package.json'
 
-
     sass:
-      gallery:
+      styles:
         options:
-          style: 'expanded'
           bundleExec: true
+          style: 'expanded'
+          sourcemap: 'none'
         files:
-          'lib/gallery.css': 'src/gallery.scss'
+          'styles/gallery.css': 'styles/gallery.scss'
 
     coffee:
-      gallery:
+      src:
+        options:
+          bare: true
         files:
           'lib/gallery.js': 'src/gallery.coffee'
       spec:
         files:
           'spec/gallery-spec.js': 'spec/gallery-spec.coffee'
 
+    umd:
+      all:
+        src: 'lib/gallery.js'
+        template: 'umd.hbs'
+        amdModuleId: 'simple-gallery'
+        objectToExport: 'gallery'
+        globalAlias: 'gallery'
+        deps:
+          'default': ['$', 'SimpleModule']
+          amd: ['jquery', 'simple-module']
+          cjs: ['jquery', 'simple-module']
+          global:
+            items: ['jQuery', 'SimpleModule']
+            prefix: ''
+
     watch:
       styles:
-        files: ['src/*.scss']
+        files: ['styles/*.scss']
         tasks: ['sass']
-      scripts:
-        files: ['src/*.coffee', 'spec/*.coffee']
-        tasks: ['coffee']
+      spec:
+        files: ['spec/**/*.coffee']
+        tasks: ['coffee:spec']
+      src:
+        files: ['src/**/*.coffee']
+        tasks: ['coffee:src', 'umd']
       jasmine:
-        files: [
-          'lib/gallery.css',
-          'lib/gallery.js',
-          'specs/*.js'
-        ],
+        files: ['lib/**/*.js', 'specs/**/*.js']
         tasks: 'jasmine:test:build'
 
     jasmine:
       test:
-        src: ['lib/gallery.js']
+        src: ['lib/**/*.js']
         options:
           outfile: 'spec/index.html'
-          styles: 'lib/gallery.css'
+          styles: 'styles/gallery.css'
           specs: 'spec/gallery-spec.js'
           vendor: [
-            'vendor/bower/jquery/dist/jquery.min.js',
-            'vendor/bower/simple-module/lib/module.js',
+            'vendor/bower/jquery/dist/jquery.min.js'
+            'vendor/bower/simple-module/lib/module.js'
             'vendor/bower/simple-util/lib/util.js'
           ]
 
@@ -53,6 +69,9 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
-  grunt.loadNpmTasks 'grunt-contrib-connect'
+  grunt.loadNpmTasks 'grunt-umd'
 
-  grunt.registerTask 'default', ['coffee', 'jasmine:test:build', 'watch']
+  grunt.registerTask 'default', ['sass', 'coffee', 'umd', 'jasmine:test:build', 'watch']
+
+
+

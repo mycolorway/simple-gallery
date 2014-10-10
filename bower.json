@@ -5,7 +5,7 @@
   "authors": [
     "kshift <kshift.lv@gmail.com>"
   ],
-  "description": "a simple gallery ui widget",
+  "description": "a simple gallery widget based on Simple Module",
   "main": "lib/gallery.min.js",
   "keywords": [
     "gallery"
@@ -13,16 +13,20 @@
   "license": "MIT",
   "ignore": [
     "**/.*",
+    "spec",
     "node_modules",
     "vendor",
+    "Gemfile",
+    "Gemfile.lock",
     "Gruntfile.coffee",
     "package.json",
-    "README"
+    "README.md",
+    "umd.hbs"
   ],
   "dependencies": {
-    "jquery": "~2.1.0",
+    "jquery": "2.x",
     "fontawesome": "~4.0.3",
-    "simple-module": "master",
-    "simple-util": "master"
+    "simple-module": "2.x",
+    "simple-util": "1.x"
   }
 }
