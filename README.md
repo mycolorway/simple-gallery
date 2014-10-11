@@ -25,7 +25,7 @@ simple-gallery
 我们需要在页面的脚本里初始化 simple-gallery：
 
 ```javascript
-simple.tree({
+simple.gallery({
     el: null,       // * 必须（当前图片）
     itemCls: "",    // 需要预览图片的 Class 名称
     wrapCls: ""     // 需要预览图片上层元素的 Class 名称，可成组预览图片
@@ -45,4 +45,3 @@ simple.tree({
 **destroy()**
 
 恢复到初始化之前的状态。
-
