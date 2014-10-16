@@ -27,6 +27,6 @@
     "jquery": "2.x",
     "fontawesome": "~4.0.3",
     "simple-module": "2.x",
-    "simple-util": "1.x"
+    "simple-util": "2.x"
   }
 }

@@ -79,7 +79,7 @@ class Gallery extends SimpleModule
         @_scrollToThumb()
         @thumbsEl.fadeIn "fast"
 
-      simple.preloadImages @curOriginSrc, (originImg) =>
+      simple.util.preloadImages @curOriginSrc, (originImg) =>
         return  if not originImg or not originImg.src
 
         @imgEl.attr("src", originImg.src) if @imgEl
@@ -202,7 +202,7 @@ class Gallery extends SimpleModule
       .end().find(".link-download").attr("href", @curOriginSrc + "&download=true")
     @_renderImage()
 
-    simple.preloadImages @curOriginSrc, (img) =>
+    simple.util.preloadImages @curOriginSrc, (img) =>
       if img.src.indexOf(@curOriginSrc) isnt -1
         @galleryEl.removeClass "loading"
         @imgEl.attr("src", img.src)
@@ -276,7 +276,7 @@ class Gallery extends SimpleModule
 
     if isOrthogonal
       # 用于修复 Firefox 下旋转后图片不能居中
-      if simple.browser.firefox and imgSize.height < imgSize.width
+      if simple.util.browser.firefox and imgSize.height < imgSize.width
         imgSize.top = (win.height() + imgSize.top - imgSize.width) / 2
 
       @galleryEl.css
@@ -300,7 +300,7 @@ class Gallery extends SimpleModule
     othersEl = @thumbs.not(@curThumb).map(->
       $(this).data("image-src") or $(this).data("origin-src")
     ).get()
-    simple.preloadImages othersEl
+    simple.util.preloadImages othersEl
 
 
   _fitSize: (container, size) ->
@@ -331,7 +331,7 @@ class Gallery extends SimpleModule
 
     @curThumbSize.left += 110 if @thumbs.length > 1
     @galleryEl.css @curThumbSize
-    @galleryEl.one simple.transitionEnd(), (e) =>
+    @galleryEl.one "webkitTransitionEnd transitionend", (e) =>
       @galleryWrapper.remove()
       @galleryEl = null
 
