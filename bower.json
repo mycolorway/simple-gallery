@@ -25,7 +25,7 @@
   ],
   "dependencies": {
     "jquery": "2.x",
-    "fontawesome": "~4.0.3",
+    "fontawesome": "~4.x",
     "simple-module": "2.x",
     "simple-util": "2.x"
   }

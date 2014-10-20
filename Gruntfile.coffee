@@ -31,11 +31,11 @@ module.exports = (grunt) ->
         objectToExport: 'gallery'
         globalAlias: 'gallery'
         deps:
-          'default': ['$', 'SimpleModule']
-          amd: ['jquery', 'simple-module']
-          cjs: ['jquery', 'simple-module']
+          'default': ['$', 'SimpleModule', 'simpleUtil']
+          amd: ['jquery', 'simple-module', 'simple-util']
+          cjs: ['jquery', 'simple-module', 'simple-util']
           global:
-            items: ['jQuery', 'SimpleModule']
+            items: ['jQuery', 'SimpleModule', 'simple.util']
             prefix: ''
 
     watch:
