@@ -331,7 +331,7 @@ class Gallery extends SimpleModule
 
     @curThumbSize.left += 110 if @thumbs.length > 1
     @galleryEl.css @curThumbSize
-    @galleryEl.one "webkitTransitionEnd transitionend", (e) =>
+    @galleryEl.one simple.util.transitionEnd(), (e) =>
       @galleryWrapper.remove()
       @galleryEl = null
 
