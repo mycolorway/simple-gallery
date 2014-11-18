@@ -26,7 +26,7 @@ class Gallery extends SimpleModule
           <span class="name"></span>
           <div class="gallery-control">
             <a class="turn-right" href="javascript:;" title="#{@::_t('download_image')}"><i class="fa fa-repeat"></i></a>
-            <a class="link-download" href="" title="#{@::_t('download_image')}"><i class="fa fa-download"></i></a>
+            <a class="link-download" href="" title="#{@::_t('download_image')}" target="_blank"><i class="fa fa-download"></i></a>
             <a class="link-show-origin" href="" title="#{@::_t('view_full_size')}" target="_blank"><i class="fa fa-external-link"></i></a>
           </div>
         </div>
@@ -134,7 +134,7 @@ class Gallery extends SimpleModule
     @curThumbSrc    = curThumbImg.attr "src"
     @curOriginName  = curThumb.data("image-name") or curThumb.data("origin-name") or curThumbImg.attr("alt") or "图片"
     @curOriginSrc   = curThumb.data("image-src") or curThumb.data("origin-src") or @curThumbSrc
-    @curDownloadSrc = curThumb.data("download-src") or "#{@curOriginSrc}&download=true"
+    @curDownloadSrc = curThumb.data("download-src") or @curOriginSrc
     @curThumbSize   = @_getCurThumbSize()
     @curOriginSize  = @_getCurOriginSize()
     @rotatedegrees  = 0
