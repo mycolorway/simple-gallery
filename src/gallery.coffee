@@ -130,13 +130,14 @@ class Gallery extends SimpleModule
     else
       curThumbImg = curThumb.find "[src]:first"
 
-    @curThumbImg   = curThumbImg
-    @curThumbSrc   = curThumbImg.attr "src"
-    @curOriginName = curThumb.data("image-name") or curThumb.data("origin-name") or curThumbImg.attr("alt") or "图片"
-    @curOriginSrc  = curThumb.data("image-src") or curThumb.data("origin-src") or @curThumbSrc
-    @curThumbSize  = @_getCurThumbSize()
-    @curOriginSize = @_getCurOriginSize()
-    @rotatedegrees = 0
+    @curThumbImg    = curThumbImg
+    @curThumbSrc    = curThumbImg.attr "src"
+    @curOriginName  = curThumb.data("image-name") or curThumb.data("origin-name") or curThumbImg.attr("alt") or "图片"
+    @curOriginSrc   = curThumb.data("image-src") or curThumb.data("origin-src") or @curThumbSrc
+    @curDownloadSrc = curThumb.data("download-src") or "#{@curOriginSrc}&download=true"
+    @curThumbSize   = @_getCurThumbSize()
+    @curOriginSize  = @_getCurOriginSize()
+    @rotatedegrees  = 0
 
 
   _getCurThumbSize: () ->
@@ -199,7 +200,7 @@ class Gallery extends SimpleModule
 
     @imgDetail.find(".name").text(@curOriginName)
       .end().find(".link-show-origin").attr("href", @curOriginSrc)
-      .end().find(".link-download").attr("href", @curOriginSrc + "&download=true")
+      .end().find(".link-download").attr("href", @curDownloadSrc)
     @_renderImage()
 
     simple.util.preloadImages @curOriginSrc, (img) =>
@@ -221,7 +222,7 @@ class Gallery extends SimpleModule
     @imgEl.attr("src", @curThumbSrc)
     @imgDetail.find(".name").text(@curOriginName)
       .end().find(".link-show-origin").attr("href", @curOriginSrc)
-      .end().find(".link-download").attr("href", @curOriginSrc + "&download=true")
+      .end().find(".link-download").attr("href", @curDownloadSrc)
 
     @galleryEl.css @curThumbSize
     @galleryWrapper.addClass "multi" if @thumbs.length > 1
