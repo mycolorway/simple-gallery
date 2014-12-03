@@ -134,7 +134,7 @@ class Gallery extends SimpleModule
     @curThumbSrc    = curThumbImg.attr "src"
     @curOriginName  = curThumb.data("image-name") or curThumb.data("origin-name") or curThumbImg.attr("alt") or "图片"
     @curOriginSrc   = curThumb.data("image-src") or curThumb.data("origin-src") or @curThumbSrc
-    @curDownloadSrc = curThumb.data("download-src") or @curOriginSrc
+    @curDownloadSrc = curThumb.data("download-src")
     @curThumbSize   = @_getCurThumbSize()
     @curOriginSize  = @_getCurOriginSize()
     @rotatedegrees  = 0
@@ -222,7 +222,11 @@ class Gallery extends SimpleModule
     @imgEl.attr("src", @curThumbSrc)
     @imgDetail.find(".name").text(@curOriginName)
       .end().find(".link-show-origin").attr("href", @curOriginSrc)
-      .end().find(".link-download").attr("href", @curDownloadSrc)
+
+    if @curDownloadSrc
+      @imgDetail.find(".link-download").attr("href", @curDownloadSrc)
+    else
+      @imgDetail.find(".link-download").hide()
 
     @galleryEl.css @curThumbSize
     @galleryWrapper.addClass "multi" if @thumbs.length > 1
