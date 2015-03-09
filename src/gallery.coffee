@@ -7,13 +7,13 @@ class Gallery extends SimpleModule
 
   @i18n:
     'zh-CN':
-      rotate_image: '旋转图片方向'
-      download_image: '下载图片'
-      view_full_size: '在新窗口查看原图'
+      rotate_image: '旋转'
+      download_image: '下载'
+      view_full_size: '查看'
     'en':
-      rotate_image: 'Rotate this image'
-      download_image: 'Download this image'
-      view_full_size: 'View full size'
+      rotate_image: 'Rotate'
+      download_image: 'Download'
+      view_full_size: 'View'
 
   @_tpl:
     gallery: """
