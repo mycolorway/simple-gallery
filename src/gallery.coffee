@@ -16,7 +16,28 @@ class Gallery extends SimpleModule
       view_full_size: 'View'
 
   @_tpl:
-    gallery: """
+    thumbs: """
+      <div class="gallery-list"></div>
+    """
+
+    thumb: """
+      <p class="thumb"><a class="link" href="javascript:;"><img src="" /></a></p>
+    """
+
+  _init: () ->
+    if @opts.el is null
+      throw "[Gallery] - 内容不能为空"
+
+    $(".simple-gallery").each () ->
+      $(@).data("gallery").destroy()
+
+    @_render()
+    @_bind()
+    @galleryWrapper.data("gallery", @)
+
+
+  _render: () ->
+    Gallery._tpl.gallery = """
       <div class="simple-gallery loading">
         <div class="gallery-img">
           <img src="" />
@@ -33,28 +54,6 @@ class Gallery extends SimpleModule
       </div>
     """
 
-    thumbs: """
-      <div class="gallery-list"></div>
-    """
-
-    thumb: """
-      <p class="thumb"><a class="link" href="javascript:;"><img src="" /></a></p>
-    """
-
-
-  _init: () ->
-    if @opts.el is null
-      throw "[Gallery] - 内容不能为空"
-
-    $(".simple-gallery").each () ->
-      $(@).data("gallery").destroy()
-
-    @_render()
-    @_bind()
-    @galleryWrapper.data("gallery", @)
-
-
-  _render: () ->
     $("html").addClass "simple-gallery-active"
 
     @curThumb = @opts.el
