@@ -99,14 +99,19 @@ html.simple-gallery-active {
 }
 .simple-gallery .gallery-detail .gallery-control a {
   display: inline-block;
-  width: 60px;
+  text-decoration: none;
+  min-width: 60px;
   text-align: center;
-  font-size: 20px;
+  font-size: 16px;
   color: #999;
 }
 .simple-gallery .gallery-detail .gallery-control a:hover {
   color: #fff;
   background-color: #222;
+}
+.simple-gallery .gallery-detail .gallery-control a > i span {
+  font-style: normal;
+  padding: 0 10px;
 }
 .simple-gallery .gallery-list {
   position: absolute;

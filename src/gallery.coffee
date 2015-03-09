@@ -7,32 +7,15 @@ class Gallery extends SimpleModule
 
   @i18n:
     'zh-CN':
-      rotate_image: '旋转图片方向'
-      download_image: '下载图片'
-      view_full_size: '在新窗口查看原图'
+      rotate_image: '旋转'
+      download_image: '下载'
+      view_full_size: '查看'
     'en':
-      rotate_image: 'Rotate this image'
-      download_image: 'Download this image'
-      view_full_size: 'View full size'
+      rotate_image: 'Rotate'
+      download_image: 'Download'
+      view_full_size: 'View'
 
   @_tpl:
-    gallery: """
-      <div class="simple-gallery loading">
-        <div class="gallery-img">
-          <img src="" />
-          <div class="loading-indicator"></div>
-        </div>
-        <div class="gallery-detail hide">
-          <span class="name"></span>
-          <div class="gallery-control">
-            <a class="turn-right" href="javascript:;" title="#{@::_t('rotate_image')}"><i class="fa fa-repeat"></i></a>
-            <a class="link-download" href="" title="#{@::_t('download_image')}" target="_blank"><i class="fa fa-download"></i></a>
-            <a class="link-show-origin" href="" title="#{@::_t('view_full_size')}" target="_blank"><i class="fa fa-external-link"></i></a>
-          </div>
-        </div>
-      </div>
-    """
-
     thumbs: """
       <div class="gallery-list"></div>
     """
@@ -40,7 +23,6 @@ class Gallery extends SimpleModule
     thumb: """
       <p class="thumb"><a class="link" href="javascript:;"><img src="" /></a></p>
     """
-
 
   _init: () ->
     if @opts.el is null
@@ -55,6 +37,23 @@ class Gallery extends SimpleModule
 
 
   _render: () ->
+    Gallery._tpl.gallery = """
+      <div class="simple-gallery loading">
+        <div class="gallery-img">
+          <img src="" />
+          <div class="loading-indicator"></div>
+        </div>
+        <div class="gallery-detail hide">
+          <span class="name"></span>
+          <div class="gallery-control">
+            <a class="turn-right" href="javascript:;" title="#{@_t('rotate_image')}"><i class="icon-rotate"><span>#{@_t('rotate_image')}</span></i></a>
+            <a class="link-download" href="" title="#{@_t('download_image')}" target="_blank"><i class="icon-download"><span>#{@_t('download_image')}</span></i></a>
+            <a class="link-show-origin" href="" title="#{@_t('view_full_size')}" target="_blank"><i class="icon-external-link"><span>#{@_t('view_full_size')}</span></i></a>
+          </div>
+        </div>
+      </div>
+    """
+
     $("html").addClass "simple-gallery-active"
 
     @curThumb = @opts.el
