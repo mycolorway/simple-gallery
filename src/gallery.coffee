@@ -10,10 +10,12 @@ class Gallery extends SimpleModule
       rotate_image: '旋转'
       download_image: '下载'
       view_full_size: '查看'
+      zoomin_image: '放大'
     'en':
       rotate_image: 'Rotate'
       download_image: 'Download'
       view_full_size: 'View'
+      zoomin_image: 'Zoom in'
 
   @_tpl:
     thumbs: '''
@@ -42,6 +44,9 @@ class Gallery extends SimpleModule
         <div class="gallery-img">
           <img src="" />
           <div class="loading-indicator"></div>
+          <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
+            <i class="icon-zoom-in"><span>#{@_t('zoomin_image')}</span></i>
+          </a>
         </div>
         <div class="gallery-detail hide">
           <span class="name"></span>
@@ -97,11 +102,11 @@ class Gallery extends SimpleModule
         return
       @destroy()
 
-    .on 'click.gallery', '.natural-image img', (e) ->
+    .on 'click.gallery', '.natural-image', (e) ->
       e.stopPropagation()
-      $(@).parent().remove()
+      $(@).remove()
 
-    @imgEl.on 'click.gallery', (e) =>
+    .on 'click.gallery', '.zoom-in', (e) =>
       e.stopPropagation()
       @_renderNatural()
 
@@ -185,11 +190,13 @@ class Gallery extends SimpleModule
     stageSize  =
       width:  win.width() - (if @thumbs.length > 1 then 150 else 40)
       height: win.height() - 90
+    showZoom   = @curOriginSize.width > stageSize.width or @curOriginSize.height > stageSize.height
 
     @galleryEl.css @_fitSize(stageSize, originSize)
     @imgEl.attr('src', thumbImg.src)
 
     @galleryEl.addClass 'loading'
+      .find('.zoom-in').toggle showZoom
 
 
   _onGalleryThumbClick: (e) ->

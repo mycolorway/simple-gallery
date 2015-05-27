@@ -24,10 +24,6 @@ html.simple-gallery-active {
   bottom: 0;
   left: 0;
   margin: auto;
-  cursor: zoom-in;
-  cursor: -o-zoom-in;
-  cursor: -moz-zoom-in;
-  cursor: -webkit-zoom-in;
   -webkit-transition: width 200ms ease-out, height 200ms ease-out, top 200ms ease-out, left 200ms ease-out, -webkit-transform 200ms ease-out;
   -moz-transition: width 200ms ease-out, height 200ms ease-out, top 200ms ease-out, left 200ms ease-out, -moz-transform 200ms ease-out;
   transition: width 200ms ease-out, height 200ms ease-out, top 200ms ease-out, left 200ms ease-out, transform 200ms ease-out;
@@ -64,6 +60,21 @@ html.simple-gallery-active {
 }
 .simple-gallery .gallery-img.loading .loading-indicator {
   display: block;
+}
+.simple-gallery .gallery-img .zoom-in {
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  font-size: 30px;
+  color: #ccc;
+  text-decoration: none;
+}
+.simple-gallery .gallery-img .zoom-in:hover {
+  color: #0f769f;
 }
 .simple-gallery.multi .gallery-detail {
   margin-right: 110px;
@@ -173,8 +184,4 @@ html.simple-gallery-active {
   bottom: 0;
   left: 0;
   margin: auto;
-  cursor: zoom-out;
-  cursor: -o-zoom-out;
-  cursor: -moz-zoom-out;
-  cursor: -webkit-zoom-out;
 }
