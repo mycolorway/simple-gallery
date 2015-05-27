@@ -35,7 +35,7 @@ class Gallery extends SimpleModule
 
     @_render()
     @_bind()
-    @galleryWrapper.data('gallery', @)
+    @wrapper.data('gallery', @)
 
 
   _render: () ->
@@ -81,23 +81,23 @@ class Gallery extends SimpleModule
     setTimeout (=>
       @_renderImage()
       @imgDetail.fadeIn 'fast'
-      @galleryWrapper.removeClass 'loading'
+      @wrapper.removeClass 'loading'
 
       if @thumbs.length > 1
         @_scrollToThumb()
         @thumbsEl.fadeIn 'fast'
 
-      simple.util.preloadImages @curOriginSrc, (originImg) =>
+      Util.prototype.preloadImages @curOriginSrc, (originImg) =>
         return  if not originImg or not originImg.src
 
-        @imgEl.attr('src', originImg.src) if @imgEl
-        @galleryEl.removeClass 'loading'  if @galleryEl
+        @img.attr('src', originImg.src) if @img
+        @gallery.removeClass 'loading'  if @gallery
         @_preloadOthers()
     ), 5
 
 
   _bind: () ->
-    @galleryWrapper.on 'click.gallery', (e) =>
+    @wrapper.on 'click.gallery', (e) =>
       if $(e.target).closest('.gallery-detail, .gallery-list, .natural-image').length
         return
       @destroy()
@@ -111,7 +111,6 @@ class Gallery extends SimpleModule
       @_renderNatural()
 
     @imgDetail.find('.turn-right').on 'click.gallery', (e) =>
-      e.preventDefault()
       e.stopPropagation()
       @_rotate()
 
@@ -131,8 +130,8 @@ class Gallery extends SimpleModule
 
 
   _unbind: () ->
-    @galleryWrapper.off '.gallery'
-    @imgEl.off '.gallery'
+    @wrapper.off '.gallery'
+    @img.off '.gallery'
     @imgDetail.off '.gallery'
     @thumbsEl.off '.gallery'
     $(document).off '.gallery'
@@ -140,34 +139,34 @@ class Gallery extends SimpleModule
 
   # 当 curThumb 改变的时候就调用一次，更新当前显示图片的基本信息
   _onThumbChange: () ->
-    curThumb = @curThumb
+    $curThumb = @curThumb
 
-    if curThumb.is '[src]'
-      curThumbImg = curThumb
+    if $curThumb.is '[src]'
+      $curThumbImg = $curThumb
     else
-      curThumbImg = curThumb.find '[src]:first'
+      $curThumbImg = $curThumb.find '[src]:first'
 
-    @curThumbImg    = curThumbImg
-    @curThumbSrc    = curThumbImg.attr 'src'
-    @curOriginName  = curThumb.data('image-name') or curThumb.data('origin-name') or curThumbImg.attr('alt') or '图片'
-    @curOriginSrc   = curThumb.data('image-src') or curThumb.data('origin-src') or @curThumbSrc
-    @curDownloadSrc = curThumb.data('download-src')
-    @curThumbSize   = @_getCurThumbSize()
-    @curOriginSize  = @_getCurOriginSize()
-    @rotatedegrees  = 0
+    @curThumbImg = $curThumbImg
+    @curThumbSrc = $curThumbImg.attr 'src'
+    @curOriginName = $curThumb.data('image-name') or $curThumb.data('origin-name') or $curThumbImg.attr('alt') or '图片'
+    @curOriginSrc = $curThumb.data('image-src') or $curThumb.data('origin-src') or @curThumbSrc
+    @curDownloadSrc = $curThumb.data('download-src')
+    @curThumbSize = @_getCurThumbSize()
+    @curOriginSize = @_getCurOriginSize()
+    @rotatedegrees = 0
 
 
   _getCurThumbSize: () ->
-    doc      = $(document)
-    win      = $(window)
-    thumbImg = @curThumbImg
-    offset   = thumbImg.offset()
+    $doc = $(document)
+    $win = $(window)
+    $thumbImg = @curThumbImg
+    offset = $thumbImg.offset()
 
     return {
-      width:  thumbImg.width()
-      height: thumbImg.height()
-      top:    (offset.top - doc.scrollTop() - (win.height() - thumbImg.height()) / 2) * 2
-      left:   (offset.left - doc.scrollLeft() - (win.width() - thumbImg.width()) / 2) * 2
+      width:  $thumbImg.width()
+      height: $thumbImg.height()
+      top:    (offset.top - $doc.scrollTop() - ($win.height() - $thumbImg.height()) / 2) * 2
+      left:   (offset.left - $doc.scrollLeft() - ($win.width() - $thumbImg.width()) / 2) * 2
     }
 
 
@@ -182,20 +181,20 @@ class Gallery extends SimpleModule
 
 
   _renderImage: () ->
-    return unless this.galleryEl
+    return unless @gallery
 
-    win        = $(window)
-    thumbImg   = @curThumbImg[0]
+    $win = $(window)
+    thumbImg = @curThumbImg[0]
     originSize = @curOriginSize
-    stageSize  =
-      width:  win.width() - (if @thumbs.length > 1 then 150 else 40)
-      height: win.height() - 90
-    showZoom   = @curOriginSize.width > stageSize.width or @curOriginSize.height > stageSize.height
+    stageSize =
+      width: $win.width() - (if @thumbs.length > 1 then 150 else 40)
+      height: $win.height() - 90
+    showZoom = @curOriginSize.width > stageSize.width or @curOriginSize.height > stageSize.height
 
-    @galleryEl.css @_fitSize(stageSize, originSize)
-    @imgEl.attr('src', thumbImg.src)
+    @gallery.css @_fitSize(stageSize, originSize)
+    @img.attr('src', thumbImg.src)
 
-    @galleryEl.addClass 'loading'
+    @gallery.addClass 'loading'
       .find('.zoom-in').toggle showZoom
 
 
@@ -206,7 +205,7 @@ class Gallery extends SimpleModule
     @curThumb   = originThumb
     @_onThumbChange()
 
-    @galleryEl.css
+    @gallery.css
       '-webkit-transform': 'rotate(0deg)'
       '-moz-transform':    'rotate(0deg)'
       '-ms-transform':     'rotate(0deg)'
@@ -222,23 +221,23 @@ class Gallery extends SimpleModule
       .end().find('.link-download').attr('href', @curDownloadSrc)
     @_renderImage()
 
-    simple.util.preloadImages @curOriginSrc, (img) =>
+    Util.prototype.preloadImages @curOriginSrc, (img) =>
       if img.src.indexOf(@curOriginSrc) isnt -1
-        @galleryEl.removeClass 'loading'
-        @imgEl.attr('src', img.src)
+        @gallery.removeClass 'loading'
+        @img.attr('src', img.src)
 
     return false
 
 
   # 创建当前显示图片的结构
   _createStage: () ->
-    @galleryWrapper = $(Gallery._tpl.gallery)
+    @wrapper = $(Gallery._tpl.gallery)
 
-    @galleryEl = @galleryWrapper.find '.gallery-img'
-    @imgDetail = @galleryWrapper.find '.gallery-detail'
-    @imgEl     = @galleryEl.find 'img'
+    @gallery = @wrapper.find '.gallery-img'
+    @imgDetail = @wrapper.find '.gallery-detail'
+    @img = @gallery.find 'img'
 
-    @imgEl.attr('src', @curThumbSrc)
+    @img.attr('src', @curThumbSrc)
     @imgDetail.find('.name').text(@curOriginName)
       .end().find('.link-show-origin').attr('href', @curOriginSrc)
 
@@ -247,28 +246,27 @@ class Gallery extends SimpleModule
     else
       @imgDetail.find('.link-download').hide()
 
-    @galleryEl.css @curThumbSize
-    @galleryWrapper.addClass 'multi' if @thumbs.length > 1
-    @galleryWrapper.appendTo 'body'
+    @gallery.css @curThumbSize
+    @wrapper.addClass 'multi' if @thumbs.length > 1
+    @wrapper.appendTo 'body'
     setTimeout (=>
-      @galleryWrapper.addClass 'modal'
+      @wrapper.addClass 'modal'
     ), 5
 
 
   # 创建图片列表
   _createList: () ->
-    @thumbsEl = $(Gallery._tpl.thumbs).appendTo(@galleryWrapper)
-
-    return false if @thumbs.length <= 1
+    @thumbsEl = $(Gallery._tpl.thumbs).appendTo(@wrapper)
+    return false  if @thumbs.length <= 1
 
     @thumbs.each (index, event) =>
-      thumb = $(event)
-      img   = if thumb.is '[src]' then thumb else thumb.find '[src]:first'
-      cls   = if @curThumb.is(thumb) then 'selected' else ''
+      $thumb = $(event)
+      $img = if $thumb.is '[src]' then $thumb else $thumb.find '[src]:first'
+      cls = if @curThumb.is($thumb) then 'selected' else ''
 
       $(Gallery._tpl.thumb).addClass(cls)
-        .find('img').attr('src', img.attr('src'))
-        .end().data('originThumb', thumb)
+        .find('img').attr('src', $img.attr('src'))
+        .end().data('originThumb', $thumb)
         .appendTo(@thumbsEl)
 
 
@@ -276,64 +274,65 @@ class Gallery extends SimpleModule
     @rotatedegrees += 90
 
     # 是否正交，也就是说图片显示的长宽是否有交换
-    deg          = 'rotate(' + @rotatedegrees + 'deg)'
-    originSize   = @curOriginSize
+    deg = 'rotate(' + @rotatedegrees + 'deg)'
+    originSize = @curOriginSize
     isOrthogonal = @rotatedegrees / 90 % 2 is 1
-    @galleryEl.css
+
+    @gallery.css
       '-webkit-transform': deg
-      '-moz-transform':    deg
-      '-ms-transform':     deg
-      '-o-transform':      deg
-      transform:           deg
+      '-moz-transform': deg
+      '-ms-transform': deg
+      '-o-transform': deg
+      transform: deg
 
     if isOrthogonal
       originSize =
-        width:  @curOriginSize.height
+        width: @curOriginSize.height
         height: @curOriginSize.width
 
-    win = $(window)
+    $win = $(window)
     stageSize =
-      width: win.width() - (if @thumbs.length > 1 then 110 else 0) - 40
-      height: win.height() - 90
+      width: $win.width() - (if @thumbs.length > 1 then 110 else 0) - 40
+      height: $win.height() - 90
 
     imgSize = @_fitSize(stageSize, originSize)
 
     if isOrthogonal
       # 用于修复 Firefox 下旋转后图片不能居中
-      if simple.util.browser.firefox and imgSize.height < imgSize.width
-        imgSize.top = (win.height() + imgSize.top - imgSize.width) / 2
+      if Util.prototype.browser.firefox and imgSize.height < imgSize.width
+        imgSize.top = ($win.height() + imgSize.top - imgSize.width) / 2
 
-      @galleryEl.css
+      @gallery.css
         width:  imgSize.height
         height: imgSize.width
         top:    imgSize.top
     else
-      @galleryEl.css
+      @gallery.css
         width:  imgSize.width
         height: imgSize.height
         top:    imgSize.top
 
 
   _scrollToThumb: () ->
-    doc        = $(document)
-    selectedEl = @thumbsEl.find('.selected')
-    @thumbsEl.scrollTop(@thumbsEl.scrollTop() + selectedEl.offset().top - doc.scrollTop() - 5)
+    $doc = $(document)
+    $selected = @thumbsEl.find('.selected')
+    @thumbsEl.scrollTop(@thumbsEl.scrollTop() + $selected.offset().top - $doc.scrollTop() - 5)
 
 
   _preloadOthers: () ->
-    othersEl = @thumbs.not(@curThumb).map(->
-      $(this).data('image-src') or $(this).data('origin-src')
+    $others = @thumbs.not(@curThumb).map(->
+      $(@).data('image-src') or $(@).data('origin-src')
     ).get()
-    simple.util.preloadImages othersEl
+    Util.prototype.preloadImages $others
 
 
   _fitSize: (container, size) ->
     result =
-      width:  size.width
+      width: size.width
       height: size.height
-      left:   0
+      top: -50
       right: (if @thumbs.length > 1 then 110 else 0)
-      top:    -50
+      left: 0
 
     if size.width > container.width or size.height > container.height
       if size.width / size.height > container.width / container.height
@@ -346,38 +345,36 @@ class Gallery extends SimpleModule
 
 
   _renderNatural: ->
-    @galleryWrapper.find('.natural-image').remove()
-    @imgEl.clone()
+    @wrapper.find('.natural-image').remove()
+    @img.clone()
       .css
         width: @curOriginSize.width
         height: @curOriginSize.height
       .wrap('<div class="natural-image"></div>')
       .parent()
-      .appendTo @galleryWrapper
+      .appendTo @wrapper
 
     left = top = 'auto'
     left = 0  if @curOriginSize.width > window.innerWidth
     top = 0  if @curOriginSize.height > window.innerHeight
-    @galleryWrapper.find('.natural-image img').css('margin', "#{ top } #{ left }")
+    @wrapper.find('.natural-image img').css('margin', "#{ top } #{ left }")
 
 
   destroy: () =>
     $('html').removeClass 'simple-gallery-active'
 
     @_unbind()
-    @galleryWrapper.removeClass 'modal'
+    @wrapper.removeClass 'modal'
       .find('.natural-image')
       .remove()
     @imgDetail.fadeOut '200'
     @thumbsEl.fadeOut '200'
 
     @curThumbSize.left += 110 if @thumbs.length > 1
-    @galleryEl.css @curThumbSize
-    @galleryEl.one simple.util.transitionEnd(), (e) =>
-      @galleryWrapper.remove()
-      @galleryEl = null
+    @gallery.css @curThumbSize
+    @gallery.one Util.prototype.transitionEnd(), (e) =>
+      @wrapper.remove()
 
 
 gallery = (opts) ->
   return new Gallery opts
-

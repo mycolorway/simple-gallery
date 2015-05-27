@@ -16,9 +16,10 @@ module.exports = (grunt) ->
     coffee:
       src:
         options:
+          join: true
           bare: true
         files:
-          'lib/gallery.js': 'src/gallery.coffee'
+          'lib/gallery.js': ['src/gallery.coffee', 'src/util.coffee']
       spec:
         files:
           'spec/gallery-spec.js': 'spec/gallery-spec.coffee'
@@ -31,11 +32,11 @@ module.exports = (grunt) ->
         objectToExport: 'gallery'
         globalAlias: 'gallery'
         deps:
-          'default': ['$', 'SimpleModule', 'simpleUtil']
-          amd: ['jquery', 'simple-module', 'simple-util']
-          cjs: ['jquery', 'simple-module', 'simple-util']
+          'default': ['$', 'SimpleModule']
+          amd: ['jquery', 'simple-module']
+          cjs: ['jquery', 'simple-module']
           global:
-            items: ['jQuery', 'SimpleModule', 'simple.util']
+            items: ['jQuery', 'SimpleModule']
             prefix: ''
 
     watch:

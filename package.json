@@ -1,6 +1,6 @@
 {
   "name": "simple-gallery",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "a simple gallery widget based on Simple Module",
   "repository": {
     "type": "git",
@@ -12,6 +12,10 @@
     "url": "https://github.com/mycolorway/simple-gallery/issues"
   },
   "homepage": "https://github.com/mycolorway/simple-gallery",
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "simple-module": "~2.0.6"
+  },
   "devDependencies": {
     "grunt": "0.x",
     "grunt-contrib-watch": "0.x",

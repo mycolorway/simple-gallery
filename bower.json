@@ -1,6 +1,6 @@
 {
   "name": "simple-gallery",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "homepage": "https://github.com/mycolorway/simple-gallery",
   "authors": [
     "kshift <kshift.lv@gmail.com>"
@@ -25,7 +25,6 @@
   ],
   "dependencies": {
     "jquery": "2.x",
-    "simple-module": "2.x",
-    "simple-util": "2.x"
+    "simple-module": "2.x"
   }
 }
