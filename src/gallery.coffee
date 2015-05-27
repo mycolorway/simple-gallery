@@ -87,7 +87,7 @@ class Gallery extends SimpleModule
         @_scrollToThumb()
         @thumbsEl.fadeIn 'fast'
 
-      Util.prototype.preloadImages @curOriginSrc, (originImg) =>
+      @util.preloadImages @curOriginSrc, (originImg) =>
         return  if not originImg or not originImg.src
 
         @img.attr('src', originImg.src) if @img
@@ -221,7 +221,7 @@ class Gallery extends SimpleModule
       .end().find('.link-download').attr('href', @curDownloadSrc)
     @_renderImage()
 
-    Util.prototype.preloadImages @curOriginSrc, (img) =>
+    @util.preloadImages @curOriginSrc, (img) =>
       if img.src.indexOf(@curOriginSrc) isnt -1
         @gallery.removeClass 'loading'
         @img.attr('src', img.src)
@@ -299,7 +299,7 @@ class Gallery extends SimpleModule
 
     if isOrthogonal
       # 用于修复 Firefox 下旋转后图片不能居中
-      if Util.prototype.browser.firefox and imgSize.height < imgSize.width
+      if @util.browser.firefox and imgSize.height < imgSize.width
         imgSize.top = ($win.height() + imgSize.top - imgSize.width) / 2
 
       @gallery.css
@@ -323,7 +323,7 @@ class Gallery extends SimpleModule
     $others = @thumbs.not(@curThumb).map(->
       $(@).data('image-src') or $(@).data('origin-src')
     ).get()
-    Util.prototype.preloadImages $others
+    @util.preloadImages $others
 
 
   _fitSize: (container, size) ->
@@ -372,8 +372,73 @@ class Gallery extends SimpleModule
 
     @curThumbSize.left += 110 if @thumbs.length > 1
     @gallery.css @curThumbSize
-    @gallery.one Util.prototype.transitionEnd(), (e) =>
+    @gallery.one @util.transitionEnd(), (e) =>
       @wrapper.remove()
+
+
+  # utils
+  util:
+    browser: (->
+      ua = navigator.userAgent
+      ie = /(msie|trident)/i.test(ua)
+      chrome = /chrome|crios/i.test(ua)
+      safari = /safari/i.test(ua) && !chrome
+      firefox = /firefox/i.test(ua)
+
+      if ie
+        msie: true
+        version: ua.match(/(msie |rv:)(\d+(\.\d+)?)/i)?[2] * 1
+      else if chrome
+        webkit: true
+        chrome: true
+        version: ua.match(/(?:chrome|crios)\/(\d+(\.\d+)?)/i)?[1] * 1
+      else if safari
+        webkit: true
+        safari: true
+        version: ua.match(/version\/(\d+(\.\d+)?)/i)?[1] * 1
+      else if firefox
+        mozilla: true
+        firefox: true
+        version: ua.match(/firefox\/(\d+(\.\d+)?)/i)?[1] * 1
+      else
+        {}
+    )()
+
+    preloadImages: (images, callback) ->
+      arguments.callee.loadedImages ||= {}
+      loadedImages = arguments.callee.loadedImages
+
+      if Object.prototype.toString.call(images) is "[object String]"
+        images = [images]
+      else if Object.prototype.toString.call(images) isnt "[object Array]"
+        return false
+
+      for url in images
+        if !loadedImages[url] or callback
+          imgObj = new Image()
+
+          if callback and Object.prototype.toString.call(callback) is "[object Function]"
+            imgObj.onload = ->
+              loadedImages[url] = true
+              callback(imgObj)
+
+            imgObj.onerror = ->
+              callback()
+
+          imgObj.src = url
+
+    # cross browser transitionend event name (IE10+ Opera12+)
+    transitionEnd: () ->
+      el = document.createElement('fakeelement')
+      transitions =
+        'transition':'transitionend'
+        'MozTransition':'transitionend'
+        'WebkitTransition':'webkitTransitionEnd'
+
+      for t of transitions
+        if el.style[t] isnt undefined
+          return transitions[t]
+
 
 
 gallery = (opts) ->

@@ -19,7 +19,7 @@ module.exports = (grunt) ->
           join: true
           bare: true
         files:
-          'lib/gallery.js': ['src/gallery.coffee', 'src/util.coffee']
+          'lib/gallery.js': 'src/gallery.coffee'
       spec:
         files:
           'spec/gallery-spec.js': 'spec/gallery-spec.coffee'
