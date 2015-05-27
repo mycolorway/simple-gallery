@@ -23,5 +23,12 @@
     "grunt-contrib-sass": "0.x",
     "grunt-contrib-jasmine": "0.x",
     "grunt-umd": "2.x"
-  }
+  },
+  "main": "lib/gallery.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "keywords": [
+    "gallery"
+  ]
 }
