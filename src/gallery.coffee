@@ -7,10 +7,10 @@ class Gallery extends SimpleModule
 
   @i18n:
     'zh-CN':
-      rotate_image: '旋转'
-      download_image: '下载'
-      view_full_size: '查看'
-      zoomin_image: '放大'
+      rotate_image: '旋转图片'
+      download_image: '下载图片'
+      view_full_size: '查看原图'
+      zoomin_image: '查看大图'
     'en':
       rotate_image: 'Rotate'
       download_image: 'Download'
@@ -45,7 +45,7 @@ class Gallery extends SimpleModule
           <img src="" />
           <div class="loading-indicator"></div>
           <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
-            <i class="icon-zoom-in"><span>#{@_t('zoomin_image')}</span></i>
+            #{@_t('zoomin_image')}
           </a>
         </div>
         <div class="gallery-detail hide">

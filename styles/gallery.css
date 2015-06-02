@@ -64,17 +64,20 @@ html.simple-gallery-active {
 .simple-gallery .gallery-img .zoom-in {
   display: none;
   position: absolute;
+  top: 0;
   right: 0;
-  bottom: 0;
-  width: 70px;
-  height: 70px;
-  text-align: center;
-  font-size: 45px;
-  color: #ccc;
+  margin: 5px;
+  padding: 0 8px;
+  color: #fff;
+  font-size: 15px;
+  line-height: 26px;
   text-decoration: none;
+  border-radius: 4px;
+  background-color: #999;
+  opacity: 0.6;
 }
 .simple-gallery .gallery-img .zoom-in:hover {
-  color: #0f769f;
+  opacity: 1;
 }
 .simple-gallery.multi .gallery-detail {
   margin-right: 110px;
