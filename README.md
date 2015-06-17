@@ -28,6 +28,7 @@ simple.gallery({
     el: null,       // * 必须（当前图片）
     itemCls: "",    // 需要预览图片的 Class 名称
     wrapCls: ""     // 需要预览图片上层元素的 Class 名称，可成组预览图片
+    save: true      // 是否要保存图片的旋转, 默认为 true
 });
 ```
 
