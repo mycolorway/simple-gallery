@@ -4,6 +4,7 @@ class Gallery extends SimpleModule
     el:      null
     itemCls: ''
     wrapCls: ''
+    save: true
 
   @i18n:
     'zh-CN':
@@ -266,7 +267,9 @@ class Gallery extends SimpleModule
 
   _rotate: () ->
     @rotatedegrees += 90
-    @_saveDegree()
+
+    if @opts.save
+      @_saveDegree()
 
     # 是否正交，也就是说图片显示的长宽是否有交换
     deg = 'rotate(' + @rotatedegrees + 'deg)'
@@ -309,8 +312,11 @@ class Gallery extends SimpleModule
 
 
   _initRoutate: () ->
-    key =  "simple-gallery-" + @gallery.find("img")[0].src;
-    degree =localStorage.getItem key || 0
+    if @opts.save
+      key = "simple-gallery-" + @gallery.find("img")[0].src;
+      degree = localStorage.getItem key || 0
+    else
+      degree = 0
     degree_diff = ((degree - @rotatedegrees) % 360 + 360) % 360 / 90
     for rotate in [0 ... degree_diff]
       @_rotate()

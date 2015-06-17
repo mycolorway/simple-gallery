@@ -110,6 +110,15 @@
       expect(localStorage.getItem(key)).toEqual('90');
       return done();
     });
+    it("should ", function(done) {
+      var key;
+      key = "simple-gallery-" + imageEl.find(".image:nth-child(2)").find("img")[0].src;
+      localStorage.removeItem(key);
+      gallery.opts.save = false;
+      $(".gallery-detail .turn-right").click();
+      expect(localStorage.getItem(key)).toBe(null);
+      return done();
+    });
     return it("should rotate to the saved position", function(done) {
       var key;
       imageEl.remove();

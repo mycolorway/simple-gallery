@@ -109,6 +109,14 @@ describe "rotate picture", ->
     expect(localStorage.getItem(key)).toEqual('90')
     done()
 
+  it "should " , (done) ->
+    key = "simple-gallery-" + imageEl.find(".image:nth-child(2)").find("img")[0].src;
+    localStorage.removeItem(key);
+    gallery.opts.save = false
+    $(".gallery-detail .turn-right").click()
+    expect(localStorage.getItem(key)).toBe(null)
+    done()
+
   it "should rotate to the saved position" , (done) ->
     imageEl.remove()
     $(".simple-gallery").each () ->
@@ -118,7 +126,6 @@ describe "rotate picture", ->
     key = "simple-gallery-" + imageEl.find(".image:nth-child(2)").find("img")[0].src;
     expect(localStorage.getItem(key)).toEqual('180')
     done()
-
 
 
 describe "next picture", ->
