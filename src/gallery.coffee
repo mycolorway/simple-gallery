@@ -66,7 +66,7 @@ class Gallery extends SimpleModule
     """
 
     $('html').addClass 'simple-gallery-active'
-
+    @rotatedegrees = 0
     @curThumb = @opts.el
     @_onThumbChange()
 
@@ -93,6 +93,7 @@ class Gallery extends SimpleModule
         @img.attr('src', originImg.src) if @img
         @gallery.removeClass 'loading'  if @gallery
         @_preloadOthers()
+        @_initRoutate()
     ), 5
 
 
@@ -153,7 +154,6 @@ class Gallery extends SimpleModule
     @curDownloadSrc = $curThumb.data('download-src')
     @curThumbSize = @_getCurThumbSize()
     @curOriginSize = @_getCurOriginSize()
-    @rotatedegrees = 0
 
 
   _getCurThumbSize: () ->
@@ -205,13 +205,6 @@ class Gallery extends SimpleModule
     @curThumb   = originThumb
     @_onThumbChange()
 
-    @gallery.css
-      '-webkit-transform': 'rotate(0deg)'
-      '-moz-transform':    'rotate(0deg)'
-      '-ms-transform':     'rotate(0deg)'
-      '-o-transform':      'rotate(0deg)'
-      transform:           'rotate(0deg)'
-
     galleryItem.addClass 'selected'
       .siblings '.selected'
       .removeClass 'selected'
@@ -225,6 +218,7 @@ class Gallery extends SimpleModule
       if img.src.indexOf(@curOriginSrc) isnt -1
         @gallery.removeClass 'loading'
         @img.attr('src', img.src)
+        @_initRoutate()
 
     return false
 
@@ -272,6 +266,7 @@ class Gallery extends SimpleModule
 
   _rotate: () ->
     @rotatedegrees += 90
+    @_saveDegree()
 
     # 是否正交，也就是说图片显示的长宽是否有交换
     deg = 'rotate(' + @rotatedegrees + 'deg)'
@@ -312,6 +307,17 @@ class Gallery extends SimpleModule
         height: imgSize.height
         top:    imgSize.top
 
+  _initRoutate: () ->
+    key =  "simple-gallery-" + @gallery.find("img")[0].src;
+    degree =localStorage.getItem key || 0
+    degree_diff = ((degree - @rotatedegrees) % 360 + 360) % 360 / 90
+    for rotate in [0 ... degree_diff]
+      @_rotate()
+
+  _saveDegree: () ->
+    key =  "simple-gallery-" + @gallery.find('img')[0].src;
+    value = @rotatedegrees % 360
+    localStorage.setItem key, value
 
   _scrollToThumb: () ->
     $doc = $(document)

@@ -24,10 +24,13 @@
   });
 
   afterEach(function() {
+    var key;
     imageEl.remove();
-    return $(".simple-gallery").each(function() {
+    $(".simple-gallery").each(function() {
       return $(this).data("gallery").destroy();
     });
+    key = "simple-gallery-" + imageEl.find(".image:nth-child(2)").find("img")[0].src;
+    return localStorage.removeItem(key);
   });
 
   describe("basic usage", function() {
@@ -97,8 +100,26 @@
         return done();
       }), 800);
     });
-    return it("should rotate the picture when click turn-right button", function(done) {
+    it("should rotate the picture when click turn-right button", function(done) {
       expect(scale).toEqual(newScale);
+      return done();
+    });
+    it("should save rotation info after rotation", function(done) {
+      var key;
+      key = "simple-gallery-" + imageEl.find(".image:nth-child(2)").find("img")[0].src;
+      expect(localStorage.getItem(key)).toEqual('90');
+      return done();
+    });
+    return it("should rotate to the saved position", function(done) {
+      var key;
+      imageEl.remove();
+      $(".simple-gallery").each(function() {
+        return $(this).data("gallery").destroy();
+      });
+      beforeEach();
+      $(".gallery-detail .turn-right").click();
+      key = "simple-gallery-" + imageEl.find(".image:nth-child(2)").find("img")[0].src;
+      expect(localStorage.getItem(key)).toEqual('180');
       return done();
     });
   });
