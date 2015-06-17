@@ -154,7 +154,6 @@ class Gallery extends SimpleModule
     @curDownloadSrc = $curThumb.data('download-src')
     @curThumbSize = @_getCurThumbSize()
     @curOriginSize = @_getCurOriginSize()
-#    @rotatedegrees = 0
 
 
   _getCurThumbSize: () ->
@@ -220,16 +219,6 @@ class Gallery extends SimpleModule
         @gallery.removeClass 'loading'
         @img.attr('src', img.src)
         @_initRoutate()
-
-#    key = @gallery.find("img").attr("src")
-#    degree = localStorage.getItem(key) || 0
-#
-#    @gallery.css
-#      '-webkit-transform': 'rotate(' + degree + 'deg)'
-#      '-moz-transform':    'rotate(' + degree + 'deg)'
-#      '-ms-transform':     'rotate(' + degree + 'deg)'
-#      '-o-transform':      'rotate(' + degree + 'deg)'
-#      transform:           'rotate(' + degree + 'deg)'
 
     return false
 
@@ -319,14 +308,14 @@ class Gallery extends SimpleModule
         top:    imgSize.top
 
   _initRoutate: () ->
-    key = @gallery.find("img").attr("src")
-    degree = localStorage.getItem(key) || 0
-    degree_diff = ((degree - @rotatedegrees) % 360 + 360) % 360 / 90 #求相差几次旋转
-    for rotate in [1 .. degree_diff]
+    key =  "simple-gallery-" + @gallery.find("img").attr("src")
+    degree =localStorage.getItem(key) || 0
+    degree_diff = ((degree - @rotatedegrees) % 360 + 360) % 360 / 90
+    for rotate in [0 ... degree_diff]
       @_rotate()
 
   _saveDegree: () ->
-    key =  @gallery.find('img').attr('src');
+    key =  "simple-gallery-" + @gallery.find('img').attr('src');
     value = @rotatedegrees % 360
     localStorage.setItem(key,value);
 
