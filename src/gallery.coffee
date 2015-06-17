@@ -321,8 +321,7 @@ class Gallery extends SimpleModule
   _initRoutate: () ->
     key = @gallery.find("img").attr("src")
     degree = localStorage.getItem(key) || 0
-    degree_diff = ((degree - @rotatedegrees) % 360 + 360) % 360 / 90
-    console.log degree + " , "+ @rotatedegrees + " , " + degree_diff
+    degree_diff = ((degree - @rotatedegrees) % 360 + 360) % 360 / 90 #求相差几次旋转
     for rotate in [1 .. degree_diff]
       @_rotate()
 
