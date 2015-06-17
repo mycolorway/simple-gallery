@@ -31,6 +31,8 @@ afterEach ->
   imageEl.remove()
   $(".simple-gallery").each () ->
     $(@).data("gallery").destroy()
+  key = "simple-gallery-" + imageEl.find(".image:nth-child(2)").find("img")[0].src;
+  localStorage.removeItem(key);
 
 
 
@@ -102,6 +104,22 @@ describe "rotate picture", ->
     expect(scale).toEqual(newScale)
     done()
 
+  it "should save rotation info after rotation" , (done) ->
+    key = "simple-gallery-" + imageEl.find(".image:nth-child(2)").find("img")[0].src;
+    expect(localStorage.getItem(key)).toEqual('90')
+    done()
+
+  it "should rotate to the saved position" , (done) ->
+    imageEl.remove()
+    $(".simple-gallery").each () ->
+      $(@).data("gallery").destroy()
+    beforeEach()
+    $(".gallery-detail .turn-right").click()
+    key = "simple-gallery-" + imageEl.find(".image:nth-child(2)").find("img")[0].src;
+    expect(localStorage.getItem(key)).toEqual('180')
+    done()
+
+
 
 describe "next picture", ->
   it "should show next picture when Right keydown", (done) ->
@@ -146,3 +164,4 @@ describe "prev picture", ->
       expect($(".link-show-origin").attr("href")).toBe(targetEl.find("img").attr("src"))
       done()
     ), 400
+

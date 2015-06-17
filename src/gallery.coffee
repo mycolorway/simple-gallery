@@ -308,16 +308,16 @@ class Gallery extends SimpleModule
         top:    imgSize.top
 
   _initRoutate: () ->
-    key =  "simple-gallery-" + @gallery.find("img").attr("src")
-    degree =localStorage.getItem(key) || 0
+    key =  "simple-gallery-" + @gallery.find("img")[0].src;
+    degree =localStorage.getItem key || 0
     degree_diff = ((degree - @rotatedegrees) % 360 + 360) % 360 / 90
     for rotate in [0 ... degree_diff]
       @_rotate()
 
   _saveDegree: () ->
-    key =  "simple-gallery-" + @gallery.find('img').attr('src');
+    key =  "simple-gallery-" + @gallery.find('img')[0].src;
     value = @rotatedegrees % 360
-    localStorage.setItem(key,value);
+    localStorage.setItem key, value
 
   _scrollToThumb: () ->
     $doc = $(document)
