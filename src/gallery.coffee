@@ -366,20 +366,16 @@ class Gallery extends SimpleModule
             .parent()
             .appendTo @wrapper
 
-    left = top = 'auto'
     width = if @rotatedegrees % 180 is 0 then @curOriginSize.width else @curOriginSize.height
     height = if @rotatedegrees % 180 is 0 then @curOriginSize.height else @curOriginSize.width
-    console.log(@rotatedegrees,width,height)
-    margin_left = 0  if width > window.innerWidth
-    margin_top = 0  if height > window.innerHeight
-    top = (height - @curOriginSize.height) / 2
-    console.log(top)
 
+    margin_left =  if width > window.innerWidth then 0 else 'auto'
+    margin_top =   if height > window.innerHeight then 0 else 'auto'
+    top = (height - @curOriginSize.height) / 2
     @wrapper.find('.natural-image img')
       .css
         'margin': "#{margin_top} #{margin_left}"
         'top' : top
-
 
   destroy: () =>
     $('html').removeClass 'simple-gallery-active'
