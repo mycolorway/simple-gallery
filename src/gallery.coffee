@@ -44,15 +44,15 @@ class Gallery extends SimpleModule
         <div class="gallery-img">
           <img src="" />
           <div class="loading-indicator"></div>
-          <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
-            #{@_t('zoomin_image')}
-          </a>
         </div>
         <div class="gallery-detail hide">
           <span class="name"></span>
           <div class="gallery-control">
             <a class="turn-right" href="javascript:;" title="#{@_t('rotate_image')}">
               <i class="icon-rotate"><span>#{@_t('rotate_image')}</span></i>
+            </a>
+            <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
+              <i class="icon-rotate"><span>#{@_t('zoomin_image')} </span></i>
             </a>
             <a class="link-download" href="" title="#{@_t('download_image')}" target="_blank">
               <i class="icon-download"><span>#{@_t('download_image')}</span></i>
@@ -307,6 +307,7 @@ class Gallery extends SimpleModule
         height: imgSize.height
         top:    imgSize.top
 
+
   _initRoutate: () ->
     key =  "simple-gallery-" + @gallery.find("img")[0].src;
     degree =localStorage.getItem key || 0
@@ -349,21 +350,35 @@ class Gallery extends SimpleModule
         result.width  = result.height * size.width / size.height
     result
 
-
   _renderNatural: ->
+    deg = 'rotate(' + @rotatedegrees + 'deg)'
     @wrapper.find('.natural-image').remove()
-    @img.clone()
-      .css
-        width: @curOriginSize.width
-        height: @curOriginSize.height
-      .wrap('<div class="natural-image"></div>')
-      .parent()
-      .appendTo @wrapper
+    img =  @img.clone()
+            .css
+              '-webkit-transform': deg
+              '-moz-transform': deg
+              '-ms-transform': deg
+              '-o-transform': deg
+              transform: deg
+              'width': @curOriginSize.width
+              'height': @curOriginSize.height
+            .wrap('<div class="natural-image"></div>')
+            .parent()
+            .appendTo @wrapper
 
     left = top = 'auto'
-    left = 0  if @curOriginSize.width > window.innerWidth
-    top = 0  if @curOriginSize.height > window.innerHeight
-    @wrapper.find('.natural-image img').css('margin', "#{ top } #{ left }")
+    width = if @rotatedegrees % 180 is 0 then @curOriginSize.width else @curOriginSize.height
+    height = if @rotatedegrees % 180 is 0 then @curOriginSize.height else @curOriginSize.width
+    console.log(@rotatedegrees,width,height)
+    margin_left = 0  if width > window.innerWidth
+    margin_top = 0  if height > window.innerHeight
+    top = (height - @curOriginSize.height) / 2
+    console.log(top)
+
+    @wrapper.find('.natural-image img')
+      .css
+        'margin': "#{margin_top} #{margin_left}"
+        'top' : top
 
 
   destroy: () =>
