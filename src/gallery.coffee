@@ -411,6 +411,9 @@ class Gallery extends SimpleModule
 
 
   destroy: () =>
+    if @zoom_in
+      @zoom_in.hide()
+      
     $('html').removeClass 'simple-gallery-active'
 
     @_unbind()
