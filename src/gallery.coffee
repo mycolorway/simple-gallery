@@ -43,7 +43,7 @@ class Gallery extends SimpleModule
     Gallery._tpl.gallery = """
       <div class="simple-gallery loading">
         <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
-          <i class="icon-rotate">#{@_t('zoomin_image')}</i>
+          #{@_t('zoomin_image')}
         </a>
         <div class="gallery-img">
           <img src="" />
@@ -71,8 +71,7 @@ class Gallery extends SimpleModule
     @curThumb = @opts.el
     @_onThumbChange()
 
-    if @curOriginSrc is null
-      return false
+    return false  if @curOriginSrc is null
 
     @thumbs = @curThumb.closest(@opts.wrapCls).find(@opts.itemCls)
 
@@ -103,8 +102,7 @@ class Gallery extends SimpleModule
 
   _bind: () ->
     @wrapper.on 'click.gallery', (e) =>
-      if $(e.target).closest('.gallery-detail, .gallery-list, .natural-image').length
-        return
+      return  if $(e.target).closest('.gallery-detail, .gallery-list, .natural-image').length
       @destroy()
 
     .on 'click.gallery', '.natural-image', (e) ->
@@ -120,6 +118,7 @@ class Gallery extends SimpleModule
       @_rotate()
 
     @thumbsEl.on 'click.gallery', '.link', $.proxy(@_onGalleryThumbClick, @)
+
     $(document).on 'keydown.gallery', (e) =>
       if /27|32/.test(e.which)
         @destroy()
@@ -132,20 +131,16 @@ class Gallery extends SimpleModule
         @thumbsEl.find('.selected').next('.thumb').find('a').click()
         @_scrollToThumb()
         return false
+
     $(window).on 'resize.gallery',(e) =>
       @_zoomInPosition()
 
 
   _unbind: () ->
-    @wrapper.off '.gallery'
-    @img.off '.gallery'
-    @imgDetail.off '.gallery'
-    @thumbsEl.off '.gallery'
     $(document).off '.gallery'
     $(window).off '.gallery'
 
 
-  # 当 curThumb 改变的时候就调用一次，更新当前显示图片的基本信息
   _onThumbChange: () ->
     $curThumb = @curThumb
 
@@ -229,7 +224,6 @@ class Gallery extends SimpleModule
     return false
 
 
-  # 创建当前显示图片的结构
   _createStage: () ->
     @wrapper = $(Gallery._tpl.gallery)
 
@@ -254,7 +248,6 @@ class Gallery extends SimpleModule
     ), 5
 
 
-  # 创建图片列表
   _createList: () ->
     @thumbsEl = $(Gallery._tpl.thumbs).appendTo(@wrapper)
     return false  if @thumbs.length <= 1
@@ -271,16 +264,12 @@ class Gallery extends SimpleModule
 
 
   _rotate: () ->
-    if @zoom_in
-      @zoom_in.hide()
-
     @rotatedegrees += 90
 
-    if @opts.save
-      @_saveDegree()
+    @zoom_in.hide()  if @zoom_in
+    @_saveDegree()  if @opts.save
 
-    # 是否正交，也就是说图片显示的长宽是否有交换
-    deg = 'rotate(' + @rotatedegrees + 'deg)'
+    deg = "rotate(#{ @rotatedegrees }deg)"
     originSize = @curOriginSize
     isOrthogonal = @rotatedegrees / 90 % 2 is 1
 
@@ -304,7 +293,7 @@ class Gallery extends SimpleModule
     imgSize = @_fitSize(stageSize, originSize)
 
     if isOrthogonal
-      # 用于修复 Firefox 下旋转后图片不能居中
+      # FIX: rotated image is not centered on Firefox
       if @util.browser.firefox and imgSize.height < imgSize.width
         imgSize.top = ($win.height() + imgSize.top - imgSize.width) / 2
 
@@ -324,7 +313,7 @@ class Gallery extends SimpleModule
 
   _initRoutate: () ->
     if @opts.save
-      key = "simple-gallery-" + @gallery.find("img")[0].src;
+      key =  "simple-gallery-#{ @gallery.find('img')[0].src }"
       degree = localStorage.getItem key || 0
     else
       degree = 0
@@ -334,7 +323,7 @@ class Gallery extends SimpleModule
 
 
   _saveDegree: () ->
-    key =  "simple-gallery-" + @gallery.find('img')[0].src;
+    key =  "simple-gallery-#{ @gallery.find('img')[0].src }"
     value = @rotatedegrees % 360
     localStorage.setItem key, value
 
@@ -345,18 +334,19 @@ class Gallery extends SimpleModule
       left = @gallery.prop('offsetLeft')
 
       if @rotatedegrees % 180 != 0
-        diff = (@gallery.width() - @gallery.height())/2
+        diff = (@gallery.width() - @gallery.height()) / 2
         left -= diff
         top -= diff
 
-      left = left + @gallery.width() - @zoom_in.width() - 16;
+      left = left + @gallery.width() - @zoom_in.width() - 16
 
       @zoom_in.css
-        'top': top
-        'left' : left
-        'display': 'block'
+        top: top + 5
+        left : left - 5
+        display: 'block'
 
       @zoom_in.show()
+
 
   _scrollToThumb: () ->
     $doc = $(document)
@@ -388,8 +378,9 @@ class Gallery extends SimpleModule
         result.width  = result.height * size.width / size.height
     result
 
+
   _renderNatural: ->
-    deg = 'rotate(' + @rotatedegrees + 'deg)'
+    deg = "rotate(#{ @rotatedegrees }deg)"
     @wrapper.find('.natural-image').remove()
     img =  @img.clone()
             .css
@@ -398,8 +389,8 @@ class Gallery extends SimpleModule
               '-ms-transform': deg
               '-o-transform': deg
               transform: deg
-              'width': @curOriginSize.width
-              'height': @curOriginSize.height
+              width: @curOriginSize.width
+              height: @curOriginSize.height
             .wrap('<div class="natural-image"></div>')
             .parent()
             .appendTo @wrapper
@@ -412,8 +403,9 @@ class Gallery extends SimpleModule
     top = (height - @curOriginSize.height) / 2
     @wrapper.find('.natural-image img')
       .css
-        'margin': "#{margin_top} #{margin_left}"
-        'top' : top
+        margin: "#{margin_top} #{margin_left}"
+        top: top
+
 
   destroy: () =>
     $('html').removeClass 'simple-gallery-active'
