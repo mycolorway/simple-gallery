@@ -1,9 +1,10 @@
 class Gallery extends SimpleModule
 
   opts:
-    el:      null
+    el: null
     itemCls: ''
     wrapCls: ''
+    save: true
 
   @i18n:
     'zh-CN':
@@ -41,12 +42,12 @@ class Gallery extends SimpleModule
   _render: () ->
     Gallery._tpl.gallery = """
       <div class="simple-gallery loading">
+        <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
+          #{@_t('zoomin_image')}
+        </a>
         <div class="gallery-img">
           <img src="" />
           <div class="loading-indicator"></div>
-          <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
-            #{@_t('zoomin_image')}
-          </a>
         </div>
         <div class="gallery-detail hide">
           <span class="name"></span>
@@ -70,8 +71,7 @@ class Gallery extends SimpleModule
     @curThumb = @opts.el
     @_onThumbChange()
 
-    if @curOriginSrc is null
-      return false
+    return false  if @curOriginSrc is null
 
     @thumbs = @curThumb.closest(@opts.wrapCls).find(@opts.itemCls)
 
@@ -89,18 +89,18 @@ class Gallery extends SimpleModule
 
       @util.preloadImages @curOriginSrc, (originImg) =>
         return  if not originImg or not originImg.src
-
         @img.attr('src', originImg.src) if @img
         @gallery.removeClass 'loading'  if @gallery
         @_preloadOthers()
         @_initRoutate()
+        @gallery.one @util.transitionEnd(), (e) =>
+          @_zoomInPosition()
     ), 5
 
 
   _bind: () ->
     @wrapper.on 'click.gallery', (e) =>
-      if $(e.target).closest('.gallery-detail, .gallery-list, .natural-image').length
-        return
+      return  if $(e.target).closest('.gallery-detail, .gallery-list, .natural-image').length
       @destroy()
 
     .on 'click.gallery', '.natural-image', (e) ->
@@ -116,6 +116,7 @@ class Gallery extends SimpleModule
       @_rotate()
 
     @thumbsEl.on 'click.gallery', '.link', $.proxy(@_onGalleryThumbClick, @)
+
     $(document).on 'keydown.gallery', (e) =>
       if /27|32/.test(e.which)
         @destroy()
@@ -129,16 +130,15 @@ class Gallery extends SimpleModule
         @_scrollToThumb()
         return false
 
+    $(window).on 'resize.gallery',(e) =>
+      @_zoomInPosition()
+
 
   _unbind: () ->
-    @wrapper.off '.gallery'
-    @img.off '.gallery'
-    @imgDetail.off '.gallery'
-    @thumbsEl.off '.gallery'
     $(document).off '.gallery'
+    $(window).off '.gallery'
 
 
-  # 当 curThumb 改变的时候就调用一次，更新当前显示图片的基本信息
   _onThumbChange: () ->
     $curThumb = @curThumb
 
@@ -193,12 +193,14 @@ class Gallery extends SimpleModule
 
     @gallery.css @_fitSize(stageSize, originSize)
     @img.attr('src', thumbImg.src)
-
+    @zoom_in = if showZoom then @wrapper.find('.zoom-in') else undefined
     @gallery.addClass 'loading'
-      .find('.zoom-in').toggle showZoom
 
 
   _onGalleryThumbClick: (e) ->
+    
+    if @zoom_in
+      @zoom_in.hide()
     link        = $(e.currentTarget)
     galleryItem = link.parent '.thumb'
     originThumb = galleryItem.data 'originThumb'
@@ -219,11 +221,12 @@ class Gallery extends SimpleModule
         @gallery.removeClass 'loading'
         @img.attr('src', img.src)
         @_initRoutate()
+        @gallery.one @util.transitionEnd(), (e) =>
+          @_zoomInPosition()
 
     return false
 
 
-  # 创建当前显示图片的结构
   _createStage: () ->
     @wrapper = $(Gallery._tpl.gallery)
 
@@ -248,7 +251,6 @@ class Gallery extends SimpleModule
     ), 5
 
 
-  # 创建图片列表
   _createList: () ->
     @thumbsEl = $(Gallery._tpl.thumbs).appendTo(@wrapper)
     return false  if @thumbs.length <= 1
@@ -266,10 +268,11 @@ class Gallery extends SimpleModule
 
   _rotate: () ->
     @rotatedegrees += 90
-    @_saveDegree()
 
-    # 是否正交，也就是说图片显示的长宽是否有交换
-    deg = 'rotate(' + @rotatedegrees + 'deg)'
+    @zoom_in.hide()  if @zoom_in
+    @_saveDegree()  if @opts.save
+
+    deg = "rotate(#{ @rotatedegrees }deg)"
     originSize = @curOriginSize
     isOrthogonal = @rotatedegrees / 90 % 2 is 1
 
@@ -293,7 +296,7 @@ class Gallery extends SimpleModule
     imgSize = @_fitSize(stageSize, originSize)
 
     if isOrthogonal
-      # 用于修复 Firefox 下旋转后图片不能居中
+      # FIX: rotated image is not centered on Firefox
       if @util.browser.firefox and imgSize.height < imgSize.width
         imgSize.top = ($win.height() + imgSize.top - imgSize.width) / 2
 
@@ -307,17 +310,46 @@ class Gallery extends SimpleModule
         height: imgSize.height
         top:    imgSize.top
 
+    @gallery.one 'transitionend webkitTransitionEnd', =>
+      @_zoomInPosition()
+
+
   _initRoutate: () ->
-    key =  "simple-gallery-" + @gallery.find("img")[0].src;
-    degree =localStorage.getItem key || 0
+    if @opts.save
+      key =  "simple-gallery-#{ @gallery.find('img')[0].src }"
+      degree = localStorage.getItem key || 0
+    else
+      degree = 0
     degree_diff = ((degree - @rotatedegrees) % 360 + 360) % 360 / 90
     for rotate in [0 ... degree_diff]
       @_rotate()
 
+
   _saveDegree: () ->
-    key =  "simple-gallery-" + @gallery.find('img')[0].src;
+    key =  "simple-gallery-#{ @gallery.find('img')[0].src }"
     value = @rotatedegrees % 360
     localStorage.setItem key, value
+
+
+  _zoomInPosition: () ->
+    if @zoom_in
+      top = @gallery.prop('offsetTop')
+      left = @gallery.prop('offsetLeft')
+
+      if @rotatedegrees % 180 != 0
+        diff = (@gallery.width() - @gallery.height()) / 2
+        left -= diff
+        top -= diff
+
+      left = left + @gallery.width() - @zoom_in.width() - 16
+
+      @zoom_in.css
+        top: top + 5
+        left : left - 5
+        display: 'block'
+
+      @zoom_in.show()
+
 
   _scrollToThumb: () ->
     $doc = $(document)
@@ -351,22 +383,37 @@ class Gallery extends SimpleModule
 
 
   _renderNatural: ->
+    deg = "rotate(#{ @rotatedegrees }deg)"
     @wrapper.find('.natural-image').remove()
-    @img.clone()
-      .css
-        width: @curOriginSize.width
-        height: @curOriginSize.height
-      .wrap('<div class="natural-image"></div>')
-      .parent()
-      .appendTo @wrapper
+    img =  @img.clone()
+            .css
+              '-webkit-transform': deg
+              '-moz-transform': deg
+              '-ms-transform': deg
+              '-o-transform': deg
+              transform: deg
+              width: @curOriginSize.width
+              height: @curOriginSize.height
+            .wrap('<div class="natural-image"></div>')
+            .parent()
+            .appendTo @wrapper
 
-    left = top = 'auto'
-    left = 0  if @curOriginSize.width > window.innerWidth
-    top = 0  if @curOriginSize.height > window.innerHeight
-    @wrapper.find('.natural-image img').css('margin', "#{ top } #{ left }")
+    width = if @rotatedegrees % 180 is 0 then @curOriginSize.width else @curOriginSize.height
+    height = if @rotatedegrees % 180 is 0 then @curOriginSize.height else @curOriginSize.width
+
+    margin_left =  if width > window.innerWidth then 0 else 'auto'
+    margin_top =   if height > window.innerHeight then 0 else 'auto'
+    top = (height - @curOriginSize.height) / 2
+    @wrapper.find('.natural-image img')
+      .css
+        margin: "#{margin_top} #{margin_left}"
+        top: top
 
 
   destroy: () =>
+    if @zoom_in
+      @zoom_in.hide()
+      
     $('html').removeClass 'simple-gallery-active'
 
     @_unbind()
