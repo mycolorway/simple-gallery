@@ -1,7 +1,7 @@
 class Gallery extends SimpleModule
 
   opts:
-    el:      null
+    el: null
     itemCls: ''
     wrapCls: ''
     save: true
@@ -42,6 +42,9 @@ class Gallery extends SimpleModule
   _render: () ->
     Gallery._tpl.gallery = """
       <div class="simple-gallery loading">
+        <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
+          <i class="icon-rotate">#{@_t('zoomin_image')}</i>
+        </a>
         <div class="gallery-img">
           <img src="" />
           <div class="loading-indicator"></div>
@@ -51,9 +54,6 @@ class Gallery extends SimpleModule
           <div class="gallery-control">
             <a class="turn-right" href="javascript:;" title="#{@_t('rotate_image')}">
               <i class="icon-rotate"><span>#{@_t('rotate_image')}</span></i>
-            </a>
-            <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
-              <i class="icon-rotate"><span>#{@_t('zoomin_image')} </span></i>
             </a>
             <a class="link-download" href="" title="#{@_t('download_image')}" target="_blank">
               <i class="icon-download"><span>#{@_t('download_image')}</span></i>
@@ -95,6 +95,8 @@ class Gallery extends SimpleModule
         @gallery.removeClass 'loading'  if @gallery
         @_preloadOthers()
         @_initRoutate()
+        @gallery.one 'transitionend webkitTransitionEnd', =>
+          @_zoomInPosition()
     ), 5
 
 
@@ -129,6 +131,8 @@ class Gallery extends SimpleModule
         @thumbsEl.find('.selected').next('.thumb').find('a').click()
         @_scrollToThumb()
         return false
+    $(window).on 'resize.gallery',(e) =>
+      @_zoomInPosition()
 
 
   _unbind: () ->
@@ -137,6 +141,7 @@ class Gallery extends SimpleModule
     @imgDetail.off '.gallery'
     @thumbsEl.off '.gallery'
     $(document).off '.gallery'
+    $(window).off '.gallery'
 
 
   # 当 curThumb 改变的时候就调用一次，更新当前显示图片的基本信息
@@ -266,6 +271,7 @@ class Gallery extends SimpleModule
 
 
   _rotate: () ->
+    $('.zoom-in').hide()
     @rotatedegrees += 90
 
     if @opts.save
@@ -310,6 +316,9 @@ class Gallery extends SimpleModule
         height: imgSize.height
         top:    imgSize.top
 
+    @gallery.one 'transitionend webkitTransitionEnd', =>
+      @_zoomInPosition()
+
 
   _initRoutate: () ->
     if @opts.save
@@ -321,10 +330,28 @@ class Gallery extends SimpleModule
     for rotate in [0 ... degree_diff]
       @_rotate()
 
+
   _saveDegree: () ->
     key =  "simple-gallery-" + @gallery.find('img')[0].src;
     value = @rotatedegrees % 360
     localStorage.setItem key, value
+
+
+  _zoomInPosition: () ->
+    $zoom_in =  $('.zoom-in')
+    top = @gallery.offset().top
+    left = @gallery.offset().left
+
+    if @rotatedegrees % 180 != 0
+      left -= (@gallery.width() - @gallery.height())
+
+    left = left + @gallery.width() - $zoom_in.width() - 16;
+
+    $zoom_in.css
+      'top': top
+      'left' : left
+
+    $zoom_in.show()
 
   _scrollToThumb: () ->
     $doc = $(document)
