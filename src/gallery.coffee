@@ -91,11 +91,12 @@ class Gallery extends SimpleModule
       @util.preloadImages @curOriginSrc, (originImg) =>
         return  if not originImg or not originImg.src
 
+
         @img.attr('src', originImg.src) if @img
         @gallery.removeClass 'loading'  if @gallery
         @_preloadOthers()
         @_initRoutate()
-        @gallery.one 'transitionend webkitTransitionEnd', =>
+        @gallery.one @util.transitionEnd(), (e) =>
           @_zoomInPosition()
     ), 5
 
@@ -199,9 +200,8 @@ class Gallery extends SimpleModule
 
     @gallery.css @_fitSize(stageSize, originSize)
     @img.attr('src', thumbImg.src)
-
+    @zoom_in = if showZoom then @wrapper.find('.zoom-in')
     @gallery.addClass 'loading'
-      .find('.zoom-in').toggle showZoom
 
 
   _onGalleryThumbClick: (e) ->
@@ -271,7 +271,9 @@ class Gallery extends SimpleModule
 
 
   _rotate: () ->
-    $('.zoom-in').hide()
+    if @zoom_in
+      @zoom_in.hide()
+
     @rotatedegrees += 90
 
     if @opts.save
@@ -338,20 +340,23 @@ class Gallery extends SimpleModule
 
 
   _zoomInPosition: () ->
-    $zoom_in =  $('.zoom-in')
-    top = @gallery.offset().top
-    left = @gallery.offset().left
+    if @zoom_in
+      top = @gallery.prop('offsetTop')
+      left = @gallery.prop('offsetLeft')
 
-    if @rotatedegrees % 180 != 0
-      left -= (@gallery.width() - @gallery.height())
+      if @rotatedegrees % 180 != 0
+        diff = (@gallery.width() - @gallery.height())/2
+        left -= diff
+        top -= diff
 
-    left = left + @gallery.width() - $zoom_in.width() - 16;
+      left = left + @gallery.width() - @zoom_in.width() - 16;
 
-    $zoom_in.css
-      'top': top
-      'left' : left
+      @zoom_in.css
+        'top': top
+        'left' : left
+        'display': 'block'
 
-    $zoom_in.show()
+      @zoom_in.show()
 
   _scrollToThumb: () ->
     $doc = $(document)
