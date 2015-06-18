@@ -89,8 +89,6 @@ class Gallery extends SimpleModule
 
       @util.preloadImages @curOriginSrc, (originImg) =>
         return  if not originImg or not originImg.src
-
-
         @img.attr('src', originImg.src) if @img
         @gallery.removeClass 'loading'  if @gallery
         @_preloadOthers()
@@ -195,11 +193,14 @@ class Gallery extends SimpleModule
 
     @gallery.css @_fitSize(stageSize, originSize)
     @img.attr('src', thumbImg.src)
-    @zoom_in = if showZoom then @wrapper.find('.zoom-in')
+    @zoom_in = if showZoom then @wrapper.find('.zoom-in') else undefined
     @gallery.addClass 'loading'
 
 
   _onGalleryThumbClick: (e) ->
+    
+    if @zoom_in
+      @zoom_in.hide()
     link        = $(e.currentTarget)
     galleryItem = link.parent '.thumb'
     originThumb = galleryItem.data 'originThumb'
@@ -220,6 +221,8 @@ class Gallery extends SimpleModule
         @gallery.removeClass 'loading'
         @img.attr('src', img.src)
         @_initRoutate()
+        @gallery.one @util.transitionEnd(), (e) =>
+          @_zoomInPosition()
 
     return false
 
