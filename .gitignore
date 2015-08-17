@@ -18,4 +18,3 @@ node_modules
 .sass-cache
 .grunt
 .bundle
-vendor
