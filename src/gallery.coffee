@@ -95,7 +95,7 @@ class Gallery extends SimpleModule
         @_initRoutate()
         @gallery.one @util.transitionEnd(), (e) =>
           @_zoomInPosition()
-    ), 200
+    ), 50
 
 
   _bind: () ->
