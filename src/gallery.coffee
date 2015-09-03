@@ -191,9 +191,7 @@ class Gallery extends SimpleModule
       height: $win.height() - 90
     showZoom = @curOriginSize.width > stageSize.width or @curOriginSize.height > stageSize.height
 
-    fitSize = @_fitSize stageSize, @curOriginSize
-
-    @gallery.css fitSize
+    @gallery.css @_fitSize stageSize, @curOriginSize
     @img.attr('src', thumbImg.src)
 
     if showZoom
