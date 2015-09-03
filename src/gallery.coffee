@@ -191,16 +191,28 @@ class Gallery extends SimpleModule
       height: $win.height() - 90
     showZoom = @curOriginSize.width > stageSize.width or @curOriginSize.height > stageSize.height
 
-    @gallery.css @_fitSize(stageSize, originSize)
+    @gallery.css @_fitSize stageSize, originSize
     @img.attr('src', thumbImg.src)
-    @zoom_in = if showZoom then @wrapper.find('.zoom-in') else undefined
+
+    if showZoom
+      @zoom_in = @wrapper.find('.zoom-in')
+      @wrapper.on 'mouseover.gallery', '.gallery-img img', (e)=>
+        e.stopPropagation()
+        @zoom_in.addClass('active')
+      @wrapper.on 'mouseout.gallery', '.gallery-img img', (e)=>
+        e.stopPropagation()
+        @zoom_in.removeClass('active')
+    else
+      @zoom_in = undefined
+      @wrapper.off 'mouseover.gallery'
+      .off 'mouseout.gallery'
+
     @gallery.addClass 'loading'
 
 
   _onGalleryThumbClick: (e) ->
-    
     if @zoom_in
-      @zoom_in.hide()
+      @zoom_in.removeClass('active')
     link        = $(e.currentTarget)
     galleryItem = link.parent '.thumb'
     originThumb = galleryItem.data 'originThumb'
@@ -268,8 +280,8 @@ class Gallery extends SimpleModule
 
   _rotate: () ->
     @rotatedegrees += 90
-
-    @zoom_in.hide()  if @zoom_in
+        
+    @zoom_in.removeClass('active') if @zoom_in
     @_saveDegree()  if @opts.save
 
     deg = "rotate(#{ @rotatedegrees }deg)"
@@ -346,9 +358,6 @@ class Gallery extends SimpleModule
       @zoom_in.css
         top: top + 5
         left : left - 5
-        display: 'block'
-
-      @zoom_in.show()
 
 
   _scrollToThumb: () ->
