@@ -11,12 +11,10 @@ class Gallery extends SimpleModule
       rotate_image: '旋转图片'
       download_image: '下载图片'
       view_full_size: '查看原图'
-      zoomin_image: '查看大图'
     'en':
       rotate_image: 'Rotate'
       download_image: 'Download'
       view_full_size: 'View'
-      zoomin_image: 'Zoom in'
 
   @_tpl:
     thumbs: '''
@@ -42,9 +40,6 @@ class Gallery extends SimpleModule
   _render: () ->
     Gallery._tpl.gallery = """
       <div class="simple-gallery loading">
-        <a class="zoom-in" href="javascript:;" title="#{@_t('zoomin_image')}">
-          #{@_t('zoomin_image')}
-        </a>
         <div class="gallery-img">
           <img src="" />
           <div class="loading-indicator"></div>
@@ -78,7 +73,7 @@ class Gallery extends SimpleModule
     @_createStage()
     @_createList()
 
-    setTimeout (=>
+    setTimeout =>
       @_renderImage()
       @imgDetail.fadeIn 'fast'
       @wrapper.removeClass 'loading'
@@ -93,9 +88,7 @@ class Gallery extends SimpleModule
         @gallery.removeClass 'loading'  if @gallery
         @_preloadOthers()
         @_initRoutate()
-        @gallery.one @util.transitionEnd(), (e) =>
-          @_zoomInPosition()
-    ), 50
+    , 50
 
 
   _bind: () ->
@@ -106,10 +99,6 @@ class Gallery extends SimpleModule
     .on 'click.gallery', '.natural-image', (e) ->
       e.stopPropagation()
       $(@).remove()
-
-    .on 'click.gallery', '.zoom-in', (e) =>
-      e.stopPropagation()
-      @_renderNatural()
 
     @imgDetail.find('.turn-right').on 'click.gallery', (e) =>
       e.stopPropagation()
@@ -129,10 +118,6 @@ class Gallery extends SimpleModule
         @thumbsEl.find('.selected').next('.thumb').find('a').click()
         @_scrollToThumb()
         return false
-
-    $(window).on 'resize.gallery',(e) =>
-      @_zoomInPosition()
-
 
   _unbind: () ->
     $(document).off '.gallery'
@@ -189,30 +174,14 @@ class Gallery extends SimpleModule
     stageSize =
       width: $win.width() - (if @thumbs.length > 1 then 150 else 40)
       height: $win.height() - 90
-    showZoom = @curOriginSize.width > stageSize.width or @curOriginSize.height > stageSize.height
 
     @gallery.css @_fitSize stageSize, originSize
     @img.attr('src', thumbImg.src)
-
-    if showZoom
-      @zoom_in = @wrapper.find('.zoom-in')
-      @wrapper.on 'mouseover.gallery', '.gallery-img img', (e)=>
-        e.stopPropagation()
-        @zoom_in.addClass('active')
-      @wrapper.on 'mouseout.gallery', '.gallery-img img', (e)=>
-        e.stopPropagation()
-        @zoom_in.removeClass('active')
-    else
-      @zoom_in = undefined
-      @wrapper.off 'mouseover.gallery'
-      .off 'mouseout.gallery'
 
     @gallery.addClass 'loading'
 
 
   _onGalleryThumbClick: (e) ->
-    if @zoom_in
-      @zoom_in.removeClass('active')
     link        = $(e.currentTarget)
     galleryItem = link.parent '.thumb'
     originThumb = galleryItem.data 'originThumb'
@@ -233,8 +202,6 @@ class Gallery extends SimpleModule
         @gallery.removeClass 'loading'
         @img.attr('src', img.src)
         @_initRoutate()
-        @gallery.one @util.transitionEnd(), (e) =>
-          @_zoomInPosition()
 
     return false
 
@@ -281,7 +248,6 @@ class Gallery extends SimpleModule
   _rotate: () ->
     @rotatedegrees += 90
         
-    @zoom_in.removeClass('active') if @zoom_in
     @_saveDegree()  if @opts.save
 
     deg = "rotate(#{ @rotatedegrees }deg)"
@@ -322,10 +288,6 @@ class Gallery extends SimpleModule
         height: imgSize.height
         top:    imgSize.top
 
-    @gallery.one 'transitionend webkitTransitionEnd', =>
-      @_zoomInPosition()
-
-
   _initRoutate: () ->
     if @opts.save
       key =  "simple-gallery-#{ @gallery.find('img')[0].src }"
@@ -341,24 +303,6 @@ class Gallery extends SimpleModule
     key =  "simple-gallery-#{ @gallery.find('img')[0].src }"
     value = @rotatedegrees % 360
     localStorage.setItem key, value
-
-
-  _zoomInPosition: () ->
-    if @zoom_in
-      top = @gallery.prop('offsetTop')
-      left = @gallery.prop('offsetLeft')
-
-      if @rotatedegrees % 180 != 0
-        diff = (@gallery.width() - @gallery.height()) / 2
-        left -= diff
-        top -= diff
-
-      left = left + @gallery.width() - @zoom_in.width() - 16
-
-      @zoom_in.css
-        top: top + 5
-        left : left - 5
-
 
   _scrollToThumb: () ->
     $doc = $(document)
@@ -390,39 +334,7 @@ class Gallery extends SimpleModule
         result.width  = result.height * size.width / size.height
     result
 
-
-  _renderNatural: ->
-    deg = "rotate(#{ @rotatedegrees }deg)"
-    @wrapper.find('.natural-image').remove()
-    img =  @img.clone()
-            .css
-              '-webkit-transform': deg
-              '-moz-transform': deg
-              '-ms-transform': deg
-              '-o-transform': deg
-              transform: deg
-              width: @curOriginSize.width
-              height: @curOriginSize.height
-            .wrap('<div class="natural-image"></div>')
-            .parent()
-            .appendTo @wrapper
-
-    width = if @rotatedegrees % 180 is 0 then @curOriginSize.width else @curOriginSize.height
-    height = if @rotatedegrees % 180 is 0 then @curOriginSize.height else @curOriginSize.width
-
-    margin_left =  if width > window.innerWidth then 0 else 'auto'
-    margin_top =   if height > window.innerHeight then 0 else 'auto'
-    top = (height - @curOriginSize.height) / 2
-    @wrapper.find('.natural-image img')
-      .css
-        margin: "#{margin_top} #{margin_left}"
-        top: top
-
-
   destroy: () =>
-    if @zoom_in
-      @zoom_in.hide()
-      
     $('html').removeClass 'simple-gallery-active'
 
     @_unbind()
