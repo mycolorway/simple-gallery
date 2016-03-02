@@ -176,3 +176,28 @@ html.simple-gallery-active {
   }
 }
 
+$screen-xs: 480px;
+$screen-sm: 768px;
+@media (max-width: $screen-xs) {
+  .simple-gallery{
+    .gallery-detail {
+
+      .name {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: $screen-sm) {
+  .simple-gallery {
+    .gallery-detail {
+      text-align: left;
+      padding-left: 10px;
+      .name {
+        max-width: 30%;
+      }
+    }
+  }
+}
+
