@@ -16,7 +16,7 @@ simple-gallery
 <script type="text/javascript" src="[script path]/jquery.min.js"></script>
 <script type="text/javascript" src="[script path]/module.js"></script>
 <script type="text/javascript" src="[script path]/util.js"></script>
-<script type="text/javascript" src="[script path]/galery.js"></script>
+<script type="text/javascript" src="[script path]/gallery.js"></script>
 ```
 
 **2. 初始化配置**
